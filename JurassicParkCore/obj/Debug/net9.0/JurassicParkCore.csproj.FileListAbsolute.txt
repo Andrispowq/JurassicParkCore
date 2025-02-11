@@ -1,0 +1,14 @@
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/bin/Debug/net9.0/JurassicParkCore.deps.json
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/bin/Debug/net9.0/JurassicParkCore.dll
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/bin/Debug/net9.0/JurassicParkCore.pdb
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/JurassicParkCore.csproj.AssemblyReference.cache
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/JurassicParkCore.GeneratedMSBuildEditorConfig.editorconfig
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/JurassicParkCore.AssemblyInfoInputs.cache
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/JurassicParkCore.AssemblyInfo.cs
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/JurassicParkCore.csproj.CoreCompileInputs.cache
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/JurassicParkCore.dll
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/refint/JurassicParkCore.dll
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/JurassicParkCore.pdb
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/ref/JurassicParkCore.dll
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/bin/Debug/net9.0/JurassicParkCore.runtimeconfig.json
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/JurassicParkCore.genruntimeconfig.cache
