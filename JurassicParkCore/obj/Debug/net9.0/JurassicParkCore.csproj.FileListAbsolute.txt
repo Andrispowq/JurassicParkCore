@@ -12,3 +12,4 @@
 /Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/ref/JurassicParkCore.dll
 /Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/bin/Debug/net9.0/JurassicParkCore.runtimeconfig.json
 /Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/JurassicParkCore.genruntimeconfig.cache
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkCore/obj/Debug/net9.0/JurassicParkCore.sourcelink.json

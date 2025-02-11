@@ -79,3 +79,4 @@
 /Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkTester/obj/Debug/net9.0/JurassicParkTester.pdb
 /Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkTester/obj/Debug/net9.0/JurassicParkTester.genruntimeconfig.cache
 /Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkTester/obj/Debug/net9.0/ref/JurassicParkTester.dll
+/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicParkTester/obj/Debug/net9.0/JurassicParkTester.sourcelink.json

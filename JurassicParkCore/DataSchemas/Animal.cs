@@ -5,7 +5,7 @@ namespace JurassicParkCore.DataSchemas;
 public class Animal : IKeyedDataType
 {
     [Key] public int Id { get; set; }
-    public SavedGame SavedGame { get; set; }
+    public required SavedGame SavedGame { get; set; }
     
     //General info
     public required AnimalType AnimalType { get; set; }
@@ -17,5 +17,5 @@ public class Animal : IKeyedDataType
     public required decimal Health { get; set; }
     
     //Group information
-    public AnimalGroup? Group { get; set; } = null;
+    public AnimalGroup? Group { get; set; }
 }

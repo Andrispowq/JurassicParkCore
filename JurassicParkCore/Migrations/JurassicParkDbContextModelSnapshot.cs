@@ -92,6 +92,11 @@ namespace JurassicParkCore.Migrations
                     b.Property<int>("EatingHabit")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
@@ -133,14 +138,49 @@ namespace JurassicParkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("MapObjectTypeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PositionId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("ResourceAmount")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("SavedGameId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MapObjectTypeId");
+
+                    b.HasIndex("PositionId");
+
                     b.HasIndex("SavedGameId");
 
                     b.ToTable("MapObjectTable");
+                });
+
+            modelBuilder.Entity("JurassicParkCore.DataSchemas.MapObjectType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("ResourceAmount")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MapObjectTypeTable");
                 });
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.Position", b =>
@@ -192,7 +232,7 @@ namespace JurassicParkCore.Migrations
 
                     b.HasIndex("MapSizeId");
 
-                    b.ToTable("SavedGame");
+                    b.ToTable("SavedGameTable");
                 });
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.Transaction", b =>
@@ -295,11 +335,27 @@ namespace JurassicParkCore.Migrations
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.MapObject", b =>
                 {
+                    b.HasOne("JurassicParkCore.DataSchemas.MapObjectType", "MapObjectType")
+                        .WithMany()
+                        .HasForeignKey("MapObjectTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurassicParkCore.DataSchemas.Position", "Position")
+                        .WithMany()
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("JurassicParkCore.DataSchemas.SavedGame", "SavedGame")
                         .WithMany("MapObjects")
                         .HasForeignKey("SavedGameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("MapObjectType");
+
+                    b.Navigation("Position");
 
                     b.Navigation("SavedGame");
                 });
