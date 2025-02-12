@@ -4,9 +4,13 @@ namespace JurassicParkCore.DataSchemas;
 
 public class Jeep : IKeyedDataType
 {
-    [Key] public int Id { get; set; }
-    public required SavedGame SavedGame { get; set; }
+    [Key] public long Id { get; set; }
+    public required long SavedGameId { get; set; }
     public required int SeatedVisitors { get; set; }
     //null -> not deployed, else on the map
-    public required Position? Position { get; set; }
+    public long? RouteId { get; set; }
+    public decimal RouteProgression { get; set; } = decimal.Zero;
+    
+    public virtual SavedGame SavedGame { get; set; }
+    public virtual JeepRoute? Route { get; set; }
 }

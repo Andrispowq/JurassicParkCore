@@ -9,6 +9,7 @@ public class JurassicParkDbContext : DbContext
     public DbSet<AnimalType> AnimalTypeTable { get; set; }
     public DbSet<AnimalGroup> AnimalGroupTable { get; set; }
     public DbSet<Jeep> JeepTable { get; set; }
+    public DbSet<JeepRoute> JeepRouteTable { get; set; }
     public DbSet<MapObject> MapObjectTable { get; set; }
     public DbSet<MapObjectType> MapObjectTypeTable { get; set; }
     public DbSet<Position> PositionTable { get; set; }
@@ -19,6 +20,7 @@ public class JurassicParkDbContext : DbContext
     public DataTable<AnimalType> AnimalTypes { get; }
     public DataTable<AnimalGroup> AnimalGroups { get; }
     public DataTable<Jeep> Jeeps { get; }
+    public DataTable<JeepRoute> JeepRoutes { get; }
     public DataTable<MapObject> MapObjects { get; }
     public DataTable<MapObjectType> MapObjectTypes { get; }
     public DataTable<Position> Positions { get; }
@@ -32,6 +34,7 @@ public class JurassicParkDbContext : DbContext
         AnimalTypes = new(this, AnimalTypeTable!);
         AnimalGroups = new(this, AnimalGroupTable!);
         Jeeps = new(this, JeepTable!);
+        JeepRoutes = new(this, JeepRouteTable!);
         MapObjects = new(this, MapObjectTable!);
         MapObjectTypes = new(this, MapObjectTypeTable!);
         Positions = new(this, PositionTable!);

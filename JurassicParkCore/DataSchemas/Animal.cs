@@ -4,12 +4,12 @@ namespace JurassicParkCore.DataSchemas;
 
 public class Animal : IKeyedDataType
 {
-    [Key] public int Id { get; set; }
-    public required SavedGame SavedGame { get; set; }
+    [Key] public long Id { get; set; }
+    public required long SavedGameId { get; set; }
     
     //General info
-    public required AnimalType AnimalType { get; set; }
-    public required Position? Position { get; set; }
+    public required long AnimalTypeId { get; set; }
+    public required long? PositionId { get; set; }
     
     //Nutritional info
     public required decimal HungerLevel { get; set; }
@@ -17,5 +17,10 @@ public class Animal : IKeyedDataType
     public required decimal Health { get; set; }
     
     //Group information
-    public AnimalGroup? Group { get; set; }
+    public long? GroupId { get; set; }
+    
+    public virtual SavedGame SavedGame { get; set; }
+    public virtual AnimalType AnimalType { get; set; }
+    public virtual Position? Position { get; set; }
+    public virtual AnimalGroup? Group { get; set; }
 }

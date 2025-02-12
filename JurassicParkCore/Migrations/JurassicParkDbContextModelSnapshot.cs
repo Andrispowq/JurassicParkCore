@@ -19,14 +19,14 @@ namespace JurassicParkCore.Migrations
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.Animal", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AnimalTypeId")
+                    b.Property<long>("AnimalTypeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("GroupId")
+                    b.Property<long?>("GroupId")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Health")
@@ -35,10 +35,10 @@ namespace JurassicParkCore.Migrations
                     b.Property<decimal>("HungerLevel")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("PositionId")
+                    b.Property<long?>("PositionId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("SavedGameId")
+                    b.Property<long>("SavedGameId")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("ThirstLevel")
@@ -59,24 +59,24 @@ namespace JurassicParkCore.Migrations
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.AnimalGroup", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("GroupTypeId")
+                    b.Property<long>("GroupTypeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("NextPointOfInterestId")
+                    b.Property<long?>("PositionId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("SavedGameId")
+                    b.Property<long>("SavedGameId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GroupTypeId");
 
-                    b.HasIndex("NextPointOfInterestId");
+                    b.HasIndex("PositionId");
 
                     b.HasIndex("SavedGameId");
 
@@ -85,7 +85,7 @@ namespace JurassicParkCore.Migrations
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.AnimalType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -110,14 +110,17 @@ namespace JurassicParkCore.Migrations
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.Jeep", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PositionId")
+                    b.Property<long?>("RouteId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("SavedGameId")
+                    b.Property<decimal>("RouteProgression")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("SavedGameId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("SeatedVisitors")
@@ -125,29 +128,45 @@ namespace JurassicParkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PositionId");
+                    b.HasIndex("RouteId");
 
                     b.HasIndex("SavedGameId");
 
                     b.ToTable("JeepTable");
                 });
 
-            modelBuilder.Entity("JurassicParkCore.DataSchemas.MapObject", b =>
+            modelBuilder.Entity("JurassicParkCore.DataSchemas.JeepRoute", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("MapObjectTypeId")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JeepRouteTable");
+                });
+
+            modelBuilder.Entity("JurassicParkCore.DataSchemas.MapObject", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PositionId")
+                    b.Property<long>("MapObjectTypeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("PositionId")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("ResourceAmount")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("SavedGameId")
+                    b.Property<long>("SavedGameId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -163,7 +182,7 @@ namespace JurassicParkCore.Migrations
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.MapObjectType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -185,8 +204,11 @@ namespace JurassicParkCore.Migrations
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.Position", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("JeepRouteId")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("X")
@@ -197,12 +219,14 @@ namespace JurassicParkCore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("JeepRouteId");
+
                     b.ToTable("PositionTable");
                 });
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.SavedGame", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -218,36 +242,43 @@ namespace JurassicParkCore.Migrations
                     b.Property<int>("GameSpeed")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("GameState")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("HoursSinceGoalMet")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("MapHeight")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("MapSeed")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("MapSizeId")
+                    b.Property<long>("MapWidth")
                         .HasColumnType("INTEGER");
 
                     b.Property<TimeOnly>("TimeOfDay")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.Property<decimal>("VisitorSatisfaction")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("MapSizeId");
+                    b.HasKey("Id");
 
                     b.ToTable("SavedGameTable");
                 });
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.Transaction", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsCheckpoint")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SavedGameId")
+                    b.Property<long>("SavedGameId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Type")
@@ -301,7 +332,7 @@ namespace JurassicParkCore.Migrations
 
                     b.HasOne("JurassicParkCore.DataSchemas.Position", "NextPointOfInterest")
                         .WithMany()
-                        .HasForeignKey("NextPointOfInterestId");
+                        .HasForeignKey("PositionId");
 
                     b.HasOne("JurassicParkCore.DataSchemas.SavedGame", "SavedGame")
                         .WithMany("AnimalGroups")
@@ -318,9 +349,9 @@ namespace JurassicParkCore.Migrations
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.Jeep", b =>
                 {
-                    b.HasOne("JurassicParkCore.DataSchemas.Position", "Position")
+                    b.HasOne("JurassicParkCore.DataSchemas.JeepRoute", "Route")
                         .WithMany()
-                        .HasForeignKey("PositionId");
+                        .HasForeignKey("RouteId");
 
                     b.HasOne("JurassicParkCore.DataSchemas.SavedGame", "SavedGame")
                         .WithMany("Jeeps")
@@ -328,7 +359,7 @@ namespace JurassicParkCore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Position");
+                    b.Navigation("Route");
 
                     b.Navigation("SavedGame");
                 });
@@ -360,15 +391,11 @@ namespace JurassicParkCore.Migrations
                     b.Navigation("SavedGame");
                 });
 
-            modelBuilder.Entity("JurassicParkCore.DataSchemas.SavedGame", b =>
+            modelBuilder.Entity("JurassicParkCore.DataSchemas.Position", b =>
                 {
-                    b.HasOne("JurassicParkCore.DataSchemas.Position", "MapSize")
-                        .WithMany()
-                        .HasForeignKey("MapSizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MapSize");
+                    b.HasOne("JurassicParkCore.DataSchemas.JeepRoute", null)
+                        .WithMany("RoutePositions")
+                        .HasForeignKey("JeepRouteId");
                 });
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.Transaction", b =>
@@ -385,6 +412,11 @@ namespace JurassicParkCore.Migrations
             modelBuilder.Entity("JurassicParkCore.DataSchemas.AnimalGroup", b =>
                 {
                     b.Navigation("Animals");
+                });
+
+            modelBuilder.Entity("JurassicParkCore.DataSchemas.JeepRoute", b =>
+                {
+                    b.Navigation("RoutePositions");
                 });
 
             modelBuilder.Entity("JurassicParkCore.DataSchemas.SavedGame", b =>

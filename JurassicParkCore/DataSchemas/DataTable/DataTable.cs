@@ -26,7 +26,7 @@ public class DataTable<T>(DbContext context, DbSet<T> dbSet) : IDataTable<T>
 
         All.Add(instance);
         await context.SaveChangesAsync();
-        return Option<DatabaseError>.None();
+        return new Option<DatabaseError>.None();
     }
     
     public async Task<Option<DatabaseError>> Update(T instance)
@@ -39,7 +39,7 @@ public class DataTable<T>(DbContext context, DbSet<T> dbSet) : IDataTable<T>
 
         All.Update(instance);
         await context.SaveChangesAsync();
-        return Option<DatabaseError>.None();
+        return new Option<DatabaseError>.None();
     }
     
     public async Task<Option<DatabaseError>> Delete(T instance)
@@ -52,6 +52,6 @@ public class DataTable<T>(DbContext context, DbSet<T> dbSet) : IDataTable<T>
         
         All.Remove(instance);
         await context.SaveChangesAsync();
-        return Option<DatabaseError>.None();
+        return new Option<DatabaseError>.None();
     }
 }
