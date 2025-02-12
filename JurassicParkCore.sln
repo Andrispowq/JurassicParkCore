@@ -1,8 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JurassicParkCore", "JurassicParkCore\JurassicParkCore.csproj", "{782E37CA-D417-410B-A9BE-C763065FAED3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JurassicPark.Core", "JurassicPark.Core\JurassicPark.Core.csproj", "{782E37CA-D417-410B-A9BE-C763065FAED3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JurassicParkTester", "JurassicParkTester\JurassicParkTester.csproj", "{34666D23-F3B9-403C-B50D-807B0DE71E8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JurassicPark.Playground", "JurassicPark.Playground\JurassicPark.Playground.csproj", "{34666D23-F3B9-403C-B50D-807B0DE71E8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JurassicPark.Test", "JurassicPark.Test\JurassicPark.Test.csproj", "{62451A82-D7D7-4107-87EB-4777BF6F0B66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +20,9 @@ Global
 		{34666D23-F3B9-403C-B50D-807B0DE71E8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34666D23-F3B9-403C-B50D-807B0DE71E8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34666D23-F3B9-403C-B50D-807B0DE71E8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62451A82-D7D7-4107-87EB-4777BF6F0B66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62451A82-D7D7-4107-87EB-4777BF6F0B66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62451A82-D7D7-4107-87EB-4777BF6F0B66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62451A82-D7D7-4107-87EB-4777BF6F0B66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
