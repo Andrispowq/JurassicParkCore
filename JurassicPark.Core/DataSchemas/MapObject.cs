@@ -12,7 +12,7 @@ public record MapObject : IKeyedDataType
     //When purchased, equals the MapObjectType
     public required decimal ResourceAmount { get; set; }
     
-    public virtual SavedGame SavedGame { get; set; }
-    public virtual Position Position { get; set; }
-    public virtual MapObjectType MapObjectType { get; set; }
+    public virtual SavedGame SavedGame { get; set; } = null!;
+    public virtual Position Position { get; set; } = null!;
+    public virtual MapObjectType MapObjectType { get; set; } = null!;
 }

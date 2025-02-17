@@ -9,6 +9,6 @@ public record Transaction : IKeyedDataType, ITimestamped
     public required long SavedGameId { get; set; }
     public required TransactionType Type { get; set; }
     public required decimal Amount { get; set; }
-    
-    public virtual SavedGame SavedGame { get; set; }
+
+    public virtual SavedGame SavedGame { get; set; } = null!;
 }

@@ -23,10 +23,16 @@ namespace JurassicParkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Age")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long>("AnimalTypeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<long?>("GroupId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("HasChip")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Health")
@@ -35,10 +41,17 @@ namespace JurassicParkCore.Migrations
                     b.Property<decimal>("HungerLevel")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<long?>("PositionId")
                         .HasColumnType("INTEGER");
 
                     b.Property<long>("SavedGameId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Sex")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("ThirstLevel")

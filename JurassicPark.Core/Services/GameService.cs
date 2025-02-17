@@ -114,6 +114,36 @@ public class GameService(
         }
     }
 
+    public async Task<IEnumerable<SavedGame>> GetSavedGames()
+    {
+        await using var db = await dbContextFactory.CreateDbContextAsync();
+        return db.SavedGames.All;
+    }
+
+    public async Task<Result<SavedGame, ServiceError>> GetSavedGame(long id)
+    {
+        await using var db = await dbContextFactory.CreateDbContextAsync();
+        var game = await db.SavedGames.All.FirstOrDefaultAsync(x => x.Id == id);
+        if (game is null)
+        {
+            return new NotFoundError("Game not found");
+        }
+
+        return game;
+    }
+
+    public async Task<Result<SavedGame, ServiceError>> GetSavedGameByName(string name)
+    {
+        await using var db = await dbContextFactory.CreateDbContextAsync();
+        var game = await db.SavedGames.All.FirstOrDefaultAsync(x => x.Name == name);
+        if (game is null)
+        {
+            return new NotFoundError("Game not found");
+        }
+
+        return game;
+    }
+
     public async Task<Result<SavedGame, ServiceError>> CreateNewGame(string name, Difficulty difficulty, long width, long height)
     {
         var game = new SavedGame
@@ -176,7 +206,11 @@ public class GameService(
         {
             var animal = new Animal()
             {
+                Name = "Robi",
                 AnimalTypeId = type.Id,
+                Sex = AnimalSex.Male,
+                Age = 5,
+                HasChip = false,
                 Group = null,
                 Health = 100,
                 HungerLevel = 0,

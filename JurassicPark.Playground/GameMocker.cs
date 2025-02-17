@@ -39,8 +39,22 @@ public class GameMocker(IGameService gameService)
 
         await gameService.InitialiseComponents([trex], [stone, grass, mediumLake]);
 
-        Console.Write("Enter a name for your save: ");
-        string gameName = Console.ReadLine() ?? "";
+        string? gameName;
+        while (true)
+        {
+            Console.Write("Enter a name for your save: ");
+            gameName = Console.ReadLine();
+
+            if (gameName is not null)
+            {
+                var gameFound = await gameService.GetSavedGameByName(gameName);
+                if (gameFound.IsError) //If the game is not found, we can create it
+                {
+                    break;
+                }
+            }
+        }
+
         var game = (await gameService.CreateNewGame(gameName, Difficulty.Medium, 1000, 1000)).GetValueOrThrow();
         (await gameService.PurchaseAnimal(game, trex)).GetValueOrThrow();
     }

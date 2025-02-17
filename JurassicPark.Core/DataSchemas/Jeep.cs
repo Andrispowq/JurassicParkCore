@@ -11,6 +11,6 @@ public record Jeep : IKeyedDataType
     public long? RouteId { get; set; }
     public decimal RouteProgression { get; set; } = decimal.Zero;
     
-    public virtual SavedGame SavedGame { get; set; }
+    public virtual SavedGame SavedGame { get; set; } = null!;
     public virtual JeepRoute? Route { get; set; }
 }

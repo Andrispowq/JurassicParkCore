@@ -8,6 +8,6 @@ public record JeepRoute : IKeyedDataType
     public required long SavedGameId { get; set; }
     [MaxLength(20)] public required string Name { get; set; }
     
-    public virtual SavedGame SavedGame { get; set; }
+    public virtual SavedGame SavedGame { get; set; } = null!;
     public virtual ICollection<Position> RoutePositions { get; set; } = new List<Position>();
 }

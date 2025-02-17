@@ -22,9 +22,9 @@ public record Animal : IKeyedDataType
     
     //Group information
     public long? GroupId { get; set; }
-    
-    public virtual SavedGame SavedGame { get; set; }
-    public virtual AnimalType AnimalType { get; set; }
+
+    public virtual SavedGame SavedGame { get; set; } = null!;
+    public virtual AnimalType AnimalType { get; set; } = null!;
     public virtual Position? Position { get; set; }
     public virtual AnimalGroup? Group { get; set; }
 }
