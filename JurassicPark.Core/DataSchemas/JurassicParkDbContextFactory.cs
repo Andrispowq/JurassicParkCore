@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace JurassicParkCore.DataSchemas;
+namespace JurassicPark.Core.DataSchemas;
 
 public class JurassicParkDbContextFactory : IDesignTimeDbContextFactory<JurassicParkDbContext>
 {

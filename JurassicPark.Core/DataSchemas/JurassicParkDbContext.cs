@@ -1,7 +1,7 @@
-using JurassicParkCore.DataSchemas.DataTable;
+using JurassicPark.Core.DataSchemas.DataTable;
 using Microsoft.EntityFrameworkCore;
 
-namespace JurassicParkCore.DataSchemas;
+namespace JurassicPark.Core.DataSchemas;
 
 public class JurassicParkDbContext : DbContext
 {

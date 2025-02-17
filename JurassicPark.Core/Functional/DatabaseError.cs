@@ -1,4 +1,4 @@
-namespace JurassicParkCore.Functional;
+namespace JurassicPark.Core.Functional;
 
 public class DatabaseError(string message) : Error(message);
 public sealed class EntryAlreadyExistsError() : DatabaseError("Entry already exists");

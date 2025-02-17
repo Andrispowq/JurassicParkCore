@@ -1,8 +1,8 @@
 using System.Security.Cryptography;
 
-namespace JurassicParkCore;
+namespace JurassicPark.Core;
 
-internal static class Utils
+public static class Utils
 {
     public const string DefaultAlphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ1234567890_:?!#$%-";
     public const string SpecialCharacters = "_:?!#$%-";

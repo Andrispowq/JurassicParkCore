@@ -1,7 +1,7 @@
-using JurassicParkCore.Functional;
+using JurassicPark.Core.Functional;
 using Microsoft.EntityFrameworkCore;
 
-namespace JurassicParkCore.DataSchemas.DataTable;
+namespace JurassicPark.Core.DataSchemas.DataTable;
 
 public class DataTable<T>(DbContext context, DbSet<T> dbSet) : IDataTable<T>
     where T : class, IKeyedDataType

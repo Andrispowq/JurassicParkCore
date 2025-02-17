@@ -1,8 +1,8 @@
-using JurassicParkCore.DataSchemas;
-using JurassicParkCore.Functional;
-using JurassicParkCore.Services.Interfaces;
+using JurassicPark.Core.DataSchemas;
+using JurassicPark.Core.Functional;
+using JurassicPark.Core.Services.Interfaces;
 
-namespace JurassicParkCore.Services;
+namespace JurassicPark.Core.Services;
 
 public class JeepService : IJeepService
 {

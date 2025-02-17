@@ -1,4 +1,4 @@
-namespace JurassicParkCore.Functional;
+namespace JurassicPark.Core.Functional;
 
 public abstract class ServiceError(string message) : Error(message);
 

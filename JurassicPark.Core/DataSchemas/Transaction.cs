@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace JurassicParkCore.DataSchemas;
+namespace JurassicPark.Core.DataSchemas;
 
 public record Transaction : IKeyedDataType, ITimestamped
 {
@@ -8,7 +8,7 @@ public record Transaction : IKeyedDataType, ITimestamped
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     public required long SavedGameId { get; set; }
     public required TransactionType Type { get; set; }
-    public required decimal Amount { get; set; }
+    [Range(0, Double.MaxValue)] public required decimal Amount { get; set; }
 
     public virtual SavedGame SavedGame { get; set; } = null!;
 }

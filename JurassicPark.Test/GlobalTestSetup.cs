@@ -1,6 +1,6 @@
-using JurassicParkCore.DataSchemas;
-using JurassicParkCore.Services;
-using JurassicParkCore.Services.Interfaces;
+using JurassicPark.Core.DataSchemas;
+using JurassicPark.Core.Services;
+using JurassicPark.Core.Services.Interfaces;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

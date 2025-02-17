@@ -1,7 +1,8 @@
-using JurassicParkCore.DataSchemas;
-using JurassicParkCore.Functional;
+using System.ComponentModel.DataAnnotations;
+using JurassicPark.Core.DataSchemas;
+using JurassicPark.Core.Functional;
 
-namespace JurassicParkCore.Services.Interfaces;
+namespace JurassicPark.Core.Services.Interfaces;
 
 public interface IGameService
 {
@@ -32,7 +33,7 @@ public interface IGameService
     
     //Purchases
     Task<Result<Animal, ServiceError>> PurchaseAnimal(SavedGame game, AnimalType type);
-    Task<Result<Jeep, ServiceError>> PurchaseJeep(SavedGame game);
+    Task<Result<Jeep, ServiceError>> PurchaseJeep(SavedGame game, [Range(0, Double.MaxValue)] decimal price);
     Task<Result<MapObject, ServiceError>> PurchaseMapObject(SavedGame game, MapObjectType type);
     
     //Jeep interactions

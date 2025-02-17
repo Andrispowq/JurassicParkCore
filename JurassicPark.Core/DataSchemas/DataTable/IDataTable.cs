@@ -1,6 +1,6 @@
-using JurassicParkCore.Functional;
+using JurassicPark.Core.Functional;
 
-namespace JurassicParkCore.DataSchemas.DataTable;
+namespace JurassicPark.Core.DataSchemas.DataTable;
 
 public interface IDataTable<T>
     where T : class, IKeyedDataType

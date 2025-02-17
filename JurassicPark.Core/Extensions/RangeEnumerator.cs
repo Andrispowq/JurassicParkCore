@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace JurassicParkCore.Extensions;
+namespace JurassicPark.Core.Extensions;
 
 public static class RangeEnumeratorExtensions
 {

@@ -1,8 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using JurassicParkCore.DataSchemas;
-using JurassicParkCore.Services;
-using JurassicParkCore.Services.Interfaces;
+using JurassicPark.Core.DataSchemas;
+using JurassicPark.Core.Services;
+using JurassicPark.Core.Services.Interfaces;
 using JurassicParkTester;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

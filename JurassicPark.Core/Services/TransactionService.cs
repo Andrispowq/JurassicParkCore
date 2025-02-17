@@ -1,8 +1,8 @@
-using JurassicParkCore.DataSchemas;
-using JurassicParkCore.Functional;
-using JurassicParkCore.Services.Interfaces;
+using JurassicPark.Core.DataSchemas;
+using JurassicPark.Core.Functional;
+using JurassicPark.Core.Services.Interfaces;
 
-namespace JurassicParkCore.Services;
+namespace JurassicPark.Core.Services;
 
 public class TransactionService : ITransactionService
 {
@@ -74,8 +74,10 @@ public class TransactionService : ITransactionService
             () => balance);
     }
 
-    public async Task<Option<ServiceError>> CreateTransaction(JurassicParkDbContext context, SavedGame savedGame, Transaction transaction)
+    public async Task<Option<ServiceError>> CreateTransaction(JurassicParkDbContext context, SavedGame savedGame, 
+        Transaction transaction, bool allowLose = false)
     {
+        //Check game state
         if (savedGame.Id != transaction.SavedGameId)
         {
             return new UnauthorizedError("Mismatch in games");
@@ -84,13 +86,8 @@ public class TransactionService : ITransactionService
         {
             return new UnauthorizedError("Game is over");
         }
-
-        var createResult = await context.Transactions.Create(transaction);
-        if (createResult is Option<DatabaseError>.Some error)
-        {
-            return new ConflictError(error.Value.Message);
-        }
         
+        //Check new balance after transaction
         var balanceResult = GetCurrentBalance(context, savedGame);
         if (balanceResult.IsError)
         {
@@ -98,10 +95,33 @@ public class TransactionService : ITransactionService
         }
         
         var balance = balanceResult.GetValueOrThrow();
-        if (balance >= decimal.Zero) return new Option<ServiceError>.None();
+        var newBalance = balance + transaction.Type switch
+        {
+            TransactionType.Purchase => -transaction.Amount,
+            TransactionType.Sale => transaction.Amount,
+            _ => 0,
+        };
+
+        //If we would lose but we don't allow it, cancel
+        if (newBalance < 0 && !allowLose)
+        {
+            return new UnauthorizedError("Insufficient funds, transaction cancelled");
+        }
+
+        //Else, create
+        var createResult = await context.Transactions.Create(transaction);
+        if (createResult is Option<DatabaseError>.Some error)
+        {
+            return new ConflictError(error.Value.Message);
+        }
+
+        //Lose if applicable
+        if (newBalance < 0)
+        {
+            savedGame.GameState = GameState.Lost;
+            return new UnauthorizedError("Insufficient funds, game lost");
+        }
         
-        savedGame.GameState = GameState.Lost;
-        await context.SavedGames.Update(savedGame);
-        return new UnauthorizedError("Insufficient funds, game lost");
+        return new Option<ServiceError>.None();
     }
 }

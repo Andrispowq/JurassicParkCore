@@ -1,9 +1,9 @@
-using JurassicParkCore.DataSchemas;
-using JurassicParkCore.Functional;
-using JurassicParkCore.Services.Interfaces;
+using JurassicPark.Core.DataSchemas;
+using JurassicPark.Core.Functional;
+using JurassicPark.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace JurassicParkCore.Services;
+namespace JurassicPark.Core.Services;
 
 public class GameService(
     IDbContextFactory<JurassicParkDbContext> dbContextFactory,
@@ -206,7 +206,7 @@ public class GameService(
         {
             var animal = new Animal()
             {
-                Name = "Robi",
+                Name = $"{type.Name}#{Utils.GeneratePassword(1, 4, Utils.Numbers)}",
                 AnimalTypeId = type.Id,
                 Sex = AnimalSex.Male,
                 Age = 5,
@@ -250,15 +250,53 @@ public class GameService(
         }
     }
 
-    public async Task<Result<Jeep, ServiceError>> PurchaseJeep(SavedGame game)
+    public async Task<Result<Jeep, ServiceError>> PurchaseJeep(SavedGame game, decimal price)
     {
         if (game.GameState != GameState.Ongoing)
         {
             return new UnauthorizedError("Game is over");
         }
 
-        await Task.CompletedTask;
-        throw new NotImplementedException();
+        await using var db = await dbContextFactory.CreateDbContextAsync();
+        await using var transaction = await db.Database.BeginTransactionAsync();
+
+        try
+        {
+            var jeep = new Jeep
+            {
+                SavedGameId = game.Id,
+                SeatedVisitors = 0
+            };
+
+            var jeepResult = await jeepService.CreateJeep(db, game, jeep);
+            if (jeepResult is Option<ServiceError>.Some jeepError)
+            {
+                await transaction.RollbackAsync();
+                return new ConflictError(jeepError.Value.Message);
+            }
+
+            var purchase = new Transaction()
+            {
+                Type = TransactionType.Purchase,
+                Amount = price,
+                SavedGameId = game.Id
+            };
+            
+            var transactionResult = await transactionService.CreateTransaction(db, game, purchase);
+            if (transactionResult is Option<ServiceError>.Some transactionError)
+            {
+                await transaction.RollbackAsync();
+                return transactionError.Value;
+            }
+            
+            await transaction.CommitAsync();
+            return Result<Jeep, ServiceError>.Success(jeep);
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            return new BadRequestError(ex.Message);
+        }
     }
 
     public async Task<Result<MapObject, ServiceError>> PurchaseMapObject(SavedGame game, MapObjectType type)
@@ -268,7 +306,47 @@ public class GameService(
             return new UnauthorizedError("Game is over");
         }
 
-        await Task.CompletedTask;
-        throw new NotImplementedException();
+        await using var db = await dbContextFactory.CreateDbContextAsync();
+        await using var transaction = await db.Database.BeginTransactionAsync();
+
+        try
+        {
+            var obj = new MapObject
+            {
+                PositionId = null,
+                SavedGameId = game.Id,
+                MapObjectTypeId = type.Id,
+                ResourceAmount = type.ResourceAmount
+            };
+
+            var objectResult = await mapObjectService.CreateMapObject(db, game, obj);
+            if (objectResult is Option<ServiceError>.Some objError)
+            {
+                await transaction.RollbackAsync();
+                return new ConflictError(objError.Value.Message);
+            }
+
+            var purchase = new Transaction()
+            {
+                Type = TransactionType.Purchase,
+                Amount = type.Price,
+                SavedGameId = game.Id
+            };
+            
+            var transactionResult = await transactionService.CreateTransaction(db, game, purchase);
+            if (transactionResult is Option<ServiceError>.Some transactionError)
+            {
+                await transaction.RollbackAsync();
+                return transactionError.Value;
+            }
+            
+            await transaction.CommitAsync();
+            return Result<MapObject, ServiceError>.Success(obj);
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            return new BadRequestError(ex.Message);
+        }
     }
 }

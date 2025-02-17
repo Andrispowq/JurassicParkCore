@@ -1,4 +1,4 @@
-using JurassicParkCore.DataSchemas;
+using JurassicPark.Core.DataSchemas;
 using Microsoft.EntityFrameworkCore;
 
 namespace JurassicPark.Test;

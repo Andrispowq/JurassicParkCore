@@ -4,7 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>JurassicParkCore</RootNamespace>
+        <RootNamespace>JurassicPark.Core</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

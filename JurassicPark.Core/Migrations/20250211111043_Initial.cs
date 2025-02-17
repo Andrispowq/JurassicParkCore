@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace JurassicParkCore.Migrations
+namespace JurassicPark.Core.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

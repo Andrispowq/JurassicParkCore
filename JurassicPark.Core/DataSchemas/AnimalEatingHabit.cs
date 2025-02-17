@@ -1,4 +1,4 @@
-namespace JurassicParkCore.DataSchemas;
+namespace JurassicPark.Core.DataSchemas;
 
 public enum AnimalEatingHabit
 {

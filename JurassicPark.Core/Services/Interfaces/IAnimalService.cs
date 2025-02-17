@@ -1,7 +1,7 @@
-using JurassicParkCore.DataSchemas;
-using JurassicParkCore.Functional;
+using JurassicPark.Core.DataSchemas;
+using JurassicPark.Core.Functional;
 
-namespace JurassicParkCore.Services.Interfaces;
+namespace JurassicPark.Core.Services.Interfaces;
 
 public interface IAnimalService
 {

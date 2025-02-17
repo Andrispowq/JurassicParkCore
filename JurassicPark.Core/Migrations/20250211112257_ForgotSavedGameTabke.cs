@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace JurassicParkCore.Migrations
+namespace JurassicPark.Core.Migrations
 {
     /// <inheritdoc />
     public partial class ForgotSavedGameTabke : Migration

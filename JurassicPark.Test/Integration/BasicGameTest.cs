@@ -1,7 +1,7 @@
-using JurassicParkCore.DataSchemas;
-using JurassicParkCore.Functional;
-using JurassicParkCore.Services;
-using JurassicParkCore.Services.Interfaces;
+using JurassicPark.Core.DataSchemas;
+using JurassicPark.Core.Functional;
+using JurassicPark.Core.Services;
+using JurassicPark.Core.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JurassicPark.Test.Integration;
@@ -132,8 +132,8 @@ public class BasicGameTest
                 SavedGameId = game.Id
             };
             
-            var currentBalanceResult = await _gameService.TransactionService.CreateTransaction(context, game, transaction);
-            Assert.That(currentBalanceResult, Is.TypeOf<Option<ServiceError>.Some>());
+            var currentBalanceResult = await _gameService.TransactionService.CreateTransaction(context, game, transaction, true);
+            Assert.That(currentBalanceResult.IsSome, Is.True);
         }
         
         Assert.That(game.GameState, Is.EqualTo(GameState.Lost));

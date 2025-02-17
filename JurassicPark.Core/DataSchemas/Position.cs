@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace JurassicParkCore.DataSchemas;
+namespace JurassicPark.Core.DataSchemas;
 
 public record Position : IKeyedDataType
 {

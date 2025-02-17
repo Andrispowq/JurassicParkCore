@@ -1,5 +1,5 @@
-using JurassicParkCore.DataSchemas;
-using JurassicParkCore.Services.Interfaces;
+using JurassicPark.Core.DataSchemas;
+using JurassicPark.Core.Services.Interfaces;
 
 namespace JurassicParkTester;
 

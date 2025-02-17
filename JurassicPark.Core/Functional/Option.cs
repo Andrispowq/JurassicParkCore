@@ -1,4 +1,4 @@
-namespace JurassicParkCore.Functional;
+namespace JurassicPark.Core.Functional;
 
 public abstract record Option<T>
 {
@@ -28,6 +28,35 @@ public abstract record Option<T>
         return new Option<TOut>.None();
     }
 
+    public bool IsNone => this is None;
+    public bool IsSome => this is Some;
+
+    public None AsNone
+    {
+        get
+        {
+            if (this is None none)
+            {
+                return none;
+            }
+            
+            throw new InvalidOperationException();
+        }
+    }
+
+    public Some AsSome
+    {
+        get
+        {
+            if (this is Some some)
+            {
+                return some;
+            }
+            
+            throw new InvalidOperationException();
+        }
+    }
+    
     public void ThrowIfNone()
     {
         if (this is None) throw new InvalidOperationException();

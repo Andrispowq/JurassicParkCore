@@ -1,4 +1,4 @@
-namespace JurassicParkCore.Functional;
+namespace JurassicPark.Core.Functional;
 
 public sealed class Result<T, E>
 {
