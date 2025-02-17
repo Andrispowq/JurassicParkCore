@@ -30,11 +30,21 @@ public class TransactionService : ITransactionService
     public Result<decimal, ServiceError> GetCurrentBalance(JurassicParkDbContext context, SavedGame savedGame)
     {
         var fromLastCheckpoint = GetTransactionsFromLastCheckpoint(context, savedGame).ToList();
+        decimal startingAmount = 0;
+        if (fromLastCheckpoint.Any())
+        {
+            var first = fromLastCheckpoint.First();
+            if (first.Type == TransactionType.Checkpoint)
+            {
+                startingAmount = first.Amount;
+            }
+        }
+        
         var purchaseSum = fromLastCheckpoint.Where(t => t.Type == TransactionType.Purchase)
             .Sum(t => t.Amount);
         var saleSum = fromLastCheckpoint.Where(t => t.Type == TransactionType.Sale)
             .Sum(t => t.Amount);
-        return saleSum - purchaseSum;
+        return startingAmount + saleSum - purchaseSum;
     }
 
     public async Task<Result<decimal, ServiceError>> CreateCheckpoint(JurassicParkDbContext context, SavedGame savedGame)
@@ -81,21 +91,17 @@ public class TransactionService : ITransactionService
             return new ConflictError(error.Value.Message);
         }
         
-        await context.Entry(transaction).Reference(t => t.SavedGame).LoadAsync();
-        var balanceResult = GetCurrentBalance(context, transaction.SavedGame);
+        var balanceResult = GetCurrentBalance(context, savedGame);
         if (balanceResult.IsError)
         {
             return new BadRequestError(balanceResult.GetErrorOrThrow().Message);
         }
         
         var balance = balanceResult.GetValueOrThrow();
-        if (balance < decimal.Zero)
-        {
-            transaction.SavedGame.GameState = GameState.Lost;
-            await context.SavedGames.Update(transaction.SavedGame);
-            return new UnauthorizedError("Insufficient funds, game lost");
-        }
-
-        return new Option<ServiceError>.None();
+        if (balance >= decimal.Zero) return new Option<ServiceError>.None();
+        
+        savedGame.GameState = GameState.Lost;
+        await context.SavedGames.Update(savedGame);
+        return new UnauthorizedError("Insufficient funds, game lost");
     }
 }

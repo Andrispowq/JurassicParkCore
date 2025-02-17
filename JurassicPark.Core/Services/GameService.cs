@@ -157,7 +157,8 @@ public class GameService(
         {
             return new UnauthorizedError("Game is over");
         }
-
+        
+        await Task.CompletedTask;
         throw new NotImplementedException();
     }
 
@@ -222,6 +223,7 @@ public class GameService(
             return new UnauthorizedError("Game is over");
         }
 
+        await Task.CompletedTask;
         throw new NotImplementedException();
     }
 
@@ -232,6 +234,7 @@ public class GameService(
             return new UnauthorizedError("Game is over");
         }
 
+        await Task.CompletedTask;
         throw new NotImplementedException();
     }
 }

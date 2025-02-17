@@ -113,15 +113,27 @@ public class BasicGameTest
             Assert.That(animal.AnimalTypeId, Is.EqualTo(_trex.Id));
         }
         
+        //Assert that we cannot go into negatives
         var finalPurchaseResult = await _gameService.PurchaseAnimal(game, _trex);
         Assert.That(finalPurchaseResult.IsError, Is.True);
         
         var error = finalPurchaseResult.GetErrorOrThrow();
         Assert.That(error, Is.TypeOf<UnauthorizedError>());
         
+        Assert.That(game.GameState, Is.EqualTo(GameState.Ongoing));
+        
+        //Let's now move us into the negatives, losing the game
         await using (var context = await _gameService.CreateDbContextAsync())
         {
-            await context.Entry(game).ReloadAsync();
+            var transaction = new Transaction
+            {
+                Type = TransactionType.Purchase,
+                Amount = GameService.InitialMoney,
+                SavedGameId = game.Id
+            };
+            
+            var currentBalanceResult = await _gameService.TransactionService.CreateTransaction(context, game, transaction);
+            Assert.That(currentBalanceResult, Is.TypeOf<Option<ServiceError>.Some>());
         }
         
         Assert.That(game.GameState, Is.EqualTo(GameState.Lost));
