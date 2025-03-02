@@ -11,11 +11,31 @@ public class AnimalService : IAnimalService
         return context.AnimalTypes.All;
     }
 
+    public async Task<Result<AnimalType, ServiceError>> GetAnimalTypeById(JurassicParkDbContext context, long animalTypeId)
+    {
+        var animal = await context.AnimalTypes.Get(animalTypeId);
+        return animal.Map<Result<AnimalType, ServiceError>>(value => value, error => new NotFoundError(error.Message));
+    }
+
     public async Task<Option<ServiceError>> CreateAnimalType(JurassicParkDbContext context, AnimalType animalType)
     {
         var result = await context.AnimalTypes.Create(animalType);
         return result.MapOption<ServiceError>(
             some => new ConflictError(some.Message));
+    }
+
+    public async Task<Option<ServiceError>> UpdateAnimalType(JurassicParkDbContext context, AnimalType animalType)
+    {
+        var result = await context.AnimalTypes.Update(animalType);
+        return result.MapOption<ServiceError>(
+            some => new NotFoundError(some.Message));
+    }
+
+    public async Task<Option<ServiceError>> DeleteAnimalType(JurassicParkDbContext context, AnimalType animalType)
+    {
+        var result = await context.AnimalTypes.Delete(animalType);
+        return result.MapOption<ServiceError>(
+            some => new NotFoundError(some.Message));
     }
 
     public IEnumerable<Animal> GetAnimals(JurassicParkDbContext context, SavedGame savedGame)
@@ -65,6 +85,12 @@ public class AnimalService : IAnimalService
             var result = await context.Animals.Update(animal);
             return result.MapOption<ServiceError>(error => new NotFoundError(error.Message));
         }
+    }
+
+    public async Task<Option<ServiceError>> DeleteAnimal(JurassicParkDbContext context, Animal animal)
+    {
+        var result = await context.Animals.Delete(animal);
+        return result.MapOption<ServiceError>(error => new NotFoundError(error.Message));
     }
 
     public IEnumerable<AnimalGroup> GetGroups(JurassicParkDbContext context, SavedGame savedGame)

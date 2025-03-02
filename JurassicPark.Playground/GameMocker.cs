@@ -37,8 +37,8 @@ public class GameMocker(IGameService gameService)
             }
         }
     }
-    
-    public async Task MockGame()
+
+    private async Task MockGame()
     {
         var trex = new AnimalType
         {

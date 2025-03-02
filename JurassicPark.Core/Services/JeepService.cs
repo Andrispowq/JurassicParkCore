@@ -11,6 +11,12 @@ public class JeepService : IJeepService
         return context.Jeeps.All.Where(j => j.SavedGameId == game.Id);
     }
 
+    public async Task<Result<Jeep, ServiceError>> GetJeepById(JurassicParkDbContext context, long id)
+    {
+        var jeep = await context.Jeeps.Get(id);
+        return jeep.Map<Result<Jeep, ServiceError>>(value => value, error => new NotFoundError(error.Message));
+    }
+
     public async Task<Option<ServiceError>> CreateJeep(JurassicParkDbContext context, SavedGame savedGame, Jeep jeep)
     {
         if (savedGame.Id != jeep.SavedGameId)
@@ -59,6 +65,12 @@ public class JeepService : IJeepService
     public IEnumerable<JeepRoute> GetRoutes(JurassicParkDbContext context, SavedGame game)
     {
         return context.JeepRoutes.All.Where(j => j.SavedGameId == game.Id);
+    }
+
+    public async Task<Result<JeepRoute, ServiceError>> GetRouteById(JurassicParkDbContext context, long id)
+    {
+        var jeep = await context.JeepRoutes.Get(id);
+        return jeep.Map<Result<JeepRoute, ServiceError>>(route => route, error => new NotFoundError(error.Message));
     }
 
     public async Task<Option<ServiceError>> CreateRoute(JurassicParkDbContext context, SavedGame savedGame, JeepRoute route)

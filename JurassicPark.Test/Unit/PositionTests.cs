@@ -22,23 +22,21 @@ public class PositionTests : UnitTestBase
             X = type.X,
             Y = type.Y
         };
-        
-        await using var db = await GameService.CreateDbContextAsync();
 
-        var all = GameService.PositionService.GetPositions(db);
+        var all = await GameService.GetPositions();
         Assert.That(all.Count(), Is.EqualTo(0));
         
-        var result = await GameService.PositionService.CreatePosition(db, type);
+        var result = await GameService.CreatePosition(type);
         Assert.That(result.IsNone, Is.True);
 
-        all = GameService.PositionService.GetPositions(db).ToList();
+        all = (await GameService.GetPositions()).ToList();
         Assert.That(all.Count, Is.EqualTo(1));
         Assert.That(all, Is.EquivalentTo(new[] { type }));
         
-        var result2 = await GameService.PositionService.CreatePosition(db, type2);
+        var result2 = await GameService.CreatePosition(type2);
         Assert.That(result2.IsNone, Is.True);
         
-        all = GameService.PositionService.GetPositions(db).ToList();
+        all = (await GameService.GetPositions()).ToList();
         Assert.That(all.Count, Is.EqualTo(2));
         Assert.That(all, Is.EquivalentTo(new[] { type, type2 }));
     }

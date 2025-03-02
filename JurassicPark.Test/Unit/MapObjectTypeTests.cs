@@ -17,25 +17,23 @@ public class MapObjectTypeTests : UnitTestBase
             ResourceType = ResourceType.Water,
             ResourceAmount = 0
         };
-        
-        await using var db = await GameService.CreateDbContextAsync();
 
-        var all = GameService.MapObjectService.GetMapObjectTypes(db);
+        var all = await GameService.GetMapObjectTypes();
         Assert.That(all.Count(), Is.EqualTo(0));
         
-        var result = await GameService.MapObjectService.CreateMapObjectType(db, type);
+        var result = await GameService.CreateMapObjectType(type);
         Assert.That(result.IsNone, Is.True);
 
-        all = GameService.MapObjectService.GetMapObjectTypes(db).ToList();
+        all = (await GameService.GetMapObjectTypes()).ToList();
         Assert.That(all.Count, Is.EqualTo(1));
         Assert.That(all, Is.EquivalentTo(new[] { type }));
         
-        var result2 = await GameService.MapObjectService.CreateMapObjectType(db, type);
+        var result2 = await GameService.CreateMapObjectType(type);
         Assert.That(result2.IsSome, Is.True);
         var errorType = result2.AsSome.Value;
         Assert.That(errorType, Is.TypeOf<ConflictError>());
 
-        all = GameService.MapObjectService.GetMapObjectTypes(db).ToList();
+        all = (await GameService.GetMapObjectTypes()).ToList();
         Assert.That(all.Count, Is.EqualTo(1));
         Assert.That(all, Is.EquivalentTo(new[] { type }));
     }

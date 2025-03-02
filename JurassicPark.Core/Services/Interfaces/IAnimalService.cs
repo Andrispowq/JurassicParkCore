@@ -6,20 +6,25 @@ namespace JurassicPark.Core.Services.Interfaces;
 public interface IAnimalService
 {
     //Animal types
-    public IEnumerable<AnimalType> GetAllAnimalTypes(JurassicParkDbContext context);
-    public Task<Option<ServiceError>> CreateAnimalType(JurassicParkDbContext context, AnimalType animalType);
+    IEnumerable<AnimalType> GetAllAnimalTypes(JurassicParkDbContext context);
+    Task<Result<AnimalType, ServiceError>> GetAnimalTypeById(JurassicParkDbContext context, long animalTypeId);
+    Task<Option<ServiceError>> CreateAnimalType(JurassicParkDbContext context, AnimalType animalType);
+    Task<Option<ServiceError>> UpdateAnimalType(JurassicParkDbContext context, AnimalType animalType);
+    Task<Option<ServiceError>> DeleteAnimalType(JurassicParkDbContext context, AnimalType animalType);
+    
     //Animals
-    public IEnumerable<Animal> GetAnimals(JurassicParkDbContext context, SavedGame savedGame);
-    public Task<Result<Animal, ServiceError>> GetAnimalById(JurassicParkDbContext context, long animalId);
-    public Task<Option<ServiceError>> CreateAnimal(JurassicParkDbContext context, SavedGame savedGame, Animal animal);
-    public Task<Option<ServiceError>> UpdateAnimal(JurassicParkDbContext context, Animal animal);
+    IEnumerable<Animal> GetAnimals(JurassicParkDbContext context, SavedGame savedGame);
+    Task<Result<Animal, ServiceError>> GetAnimalById(JurassicParkDbContext context, long animalId);
+    Task<Option<ServiceError>> CreateAnimal(JurassicParkDbContext context, SavedGame savedGame, Animal animal);
+    Task<Option<ServiceError>> UpdateAnimal(JurassicParkDbContext context, Animal animal);
+    Task<Option<ServiceError>> DeleteAnimal(JurassicParkDbContext context, Animal animal);
     //Groups
-    public IEnumerable<AnimalGroup> GetGroups(JurassicParkDbContext context, SavedGame savedGame);
-    public Task<Option<ServiceError>> CreateGroup(JurassicParkDbContext context, SavedGame savedGame, AnimalGroup group);
-    public Task<Option<ServiceError>> DeleteGroup(JurassicParkDbContext context, AnimalGroup group);
-    public Task<Option<ServiceError>> AddAnimalToGroup(JurassicParkDbContext context, Animal animal, AnimalGroup group);
-    public Task<Option<ServiceError>> RemoveAnimalFromGroup(JurassicParkDbContext context, Animal animal, AnimalGroup group);
+    IEnumerable<AnimalGroup> GetGroups(JurassicParkDbContext context, SavedGame savedGame);
+    Task<Option<ServiceError>> CreateGroup(JurassicParkDbContext context, SavedGame savedGame, AnimalGroup group);
+    Task<Option<ServiceError>> DeleteGroup(JurassicParkDbContext context, AnimalGroup group);
+    Task<Option<ServiceError>> AddAnimalToGroup(JurassicParkDbContext context, Animal animal, AnimalGroup group);
+    Task<Option<ServiceError>> RemoveAnimalFromGroup(JurassicParkDbContext context, Animal animal, AnimalGroup group);
     //Discoveries
-    public Task<IEnumerable<MapObject>> GetDiscoveredMapObjects(JurassicParkDbContext context, Animal animal);
-    public Task<Option<ServiceError>> DiscoverMapObject(JurassicParkDbContext context, Animal animal, MapObject mapObject);
+    Task<IEnumerable<MapObject>> GetDiscoveredMapObjects(JurassicParkDbContext context, Animal animal);
+    Task<Option<ServiceError>> DiscoverMapObject(JurassicParkDbContext context, Animal animal, MapObject mapObject);
 }

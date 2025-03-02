@@ -60,15 +60,14 @@ public class BasicGameTest
     {
         await _gameService.PruneDatabase(null);
         await _gameService.InitialiseComponents([_trex], [_stone, _grass, _mediumLake]);
-        await using var context = await _gameService.CreateDbContextAsync();
         
-        var animalTypes = _gameService.AnimalService.GetAllAnimalTypes(context)
+        var animalTypes = (await _gameService.GetAnimalTypes())
             .OrderBy(t => t.Id);
         var expectedAnimals = new List<AnimalType> { _trex }
             .OrderBy(t => t.Id);
         Assert.That(animalTypes, Is.EqualTo(expectedAnimals));
             
-        var objectTypes = _gameService.MapObjectService.GetMapObjectTypes(context)
+        var objectTypes = (await _gameService.GetMapObjectTypes())
             .OrderBy(t => t.Id);
         var expectedObjects = new List<MapObjectType> { _stone, _grass, _mediumLake }
             .OrderBy(t => t.Id);
@@ -95,9 +94,8 @@ public class BasicGameTest
         Assert.That(game.GameState, Is.EqualTo(GameState.Ongoing));
         Assert.That(game.GameSpeed, Is.EqualTo(GameSpeed.Moderate));
         
-        await using (var context = await _gameService.CreateDbContextAsync())
         {
-            var currentBalanceResult = _gameService.TransactionService.GetCurrentBalance(context, game);
+            var currentBalanceResult = await _gameService.GetCurrentBalance(game);
             Assert.That(currentBalanceResult.HasValue, Is.True);
             
             var currentBalance = currentBalanceResult.GetValueOrThrow();
@@ -123,7 +121,6 @@ public class BasicGameTest
         Assert.That(game.GameState, Is.EqualTo(GameState.Ongoing));
         
         //Let's now move us into the negatives, losing the game
-        await using (var context = await _gameService.CreateDbContextAsync())
         {
             var transaction = new Transaction
             {
@@ -132,7 +129,7 @@ public class BasicGameTest
                 SavedGameId = game.Id
             };
             
-            var currentBalanceResult = await _gameService.TransactionService.CreateTransaction(context, game, transaction, true);
+            var currentBalanceResult = await _gameService.CreateTransaction(game, transaction, true);
             Assert.That(currentBalanceResult.IsSome, Is.True);
         }
         
@@ -143,7 +140,7 @@ public class BasicGameTest
     public async Task Perform()
     {
         await SetupGameElements();
-        
+
         var gameResult = await _gameService.CreateNewGame("performGame", Difficulty.Medium, 1000, 1000);
         Assert.That(gameResult.HasValue, Is.True);
 
@@ -158,27 +155,25 @@ public class BasicGameTest
         Assert.That(game.HoursSinceGoalMet, Is.EqualTo(0));
         Assert.That(game.GameState, Is.EqualTo(GameState.Ongoing));
         Assert.That(game.GameSpeed, Is.EqualTo(GameSpeed.Moderate));
-        
-        await using (var context = await _gameService.CreateDbContextAsync())
+
         {
-            var currentBalanceResult = _gameService.TransactionService.GetCurrentBalance(context, game);
+            var currentBalanceResult = await _gameService.GetCurrentBalance(game);
             Assert.That(currentBalanceResult.HasValue, Is.True);
-            
+
             var currentBalance = currentBalanceResult.GetValueOrThrow();
             Assert.That(currentBalance, Is.EqualTo(GameService.InitialMoney));
         }
 
         var purchaseResult = await _gameService.PurchaseAnimal(game, _trex);
         Assert.That(purchaseResult.HasValue, Is.True);
-        
+
         var animal = purchaseResult.GetValueOrThrow();
         Assert.That(animal.AnimalTypeId, Is.EqualTo(_trex.Id));
-        
-        await using (var context = await _gameService.CreateDbContextAsync())
+
         {
-            var currentBalanceResult = _gameService.TransactionService.GetCurrentBalance(context, game);
+            var currentBalanceResult = await _gameService.GetCurrentBalance(game);
             Assert.That(currentBalanceResult.HasValue, Is.True);
-            
+
             var currentBalance = currentBalanceResult.GetValueOrThrow();
             Assert.That(currentBalance, Is.EqualTo(GameService.InitialMoney - _trex.Price));
         }

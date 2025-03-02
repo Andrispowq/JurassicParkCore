@@ -11,6 +11,12 @@ public class PositionService : IPositionService
         return context.Positions.All;
     }
 
+    public async Task<Result<Position, ServiceError>> GetPositionById(JurassicParkDbContext context, long id)
+    {
+        var position = await context.Positions.Get(id);
+        return position.Map<Result<Position, ServiceError>>(p => p, e => new NotFoundError(e.Message));
+    }
+
     public async Task<Option<ServiceError>> CreatePosition(JurassicParkDbContext context, Position position)
     {
         var result = await context.Positions.Create(position);

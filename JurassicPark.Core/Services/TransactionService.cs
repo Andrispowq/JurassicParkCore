@@ -28,6 +28,12 @@ public class TransactionService : ITransactionService
         return context.Transactions.All.Where(t => t.SavedGame.Id == savedGame.Id);
     }
 
+    public async Task<Result<Transaction, ServiceError>> GetTransactionById(JurassicParkDbContext context, long id)
+    {
+        var transaction = await context.Transactions.Get(id);
+        return transaction.Map<Result<Transaction, ServiceError>>(t => t, e => new NotFoundError(e.Message));
+    }
+
     public Result<decimal, ServiceError> GetCurrentBalance(JurassicParkDbContext context, SavedGame savedGame)
     {
         var fromLastCheckpoint = GetTransactionsFromLastCheckpoint(context, savedGame).ToList();

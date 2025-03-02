@@ -70,8 +70,7 @@ public class AnimalTests : GameRequiredTest
             _ = await CreateAnimal(game, rabbit); 
         }
 
-        await using var db = await GameService.CreateDbContextAsync();
-        var animals = GameService.AnimalService.GetAnimals(db, game);
+        var animals = await GameService.GetAnimals(game);
         foreach (var animal in animals)
         {
             Assert.That(animal.AnimalTypeId, Is.EqualTo(rabbit.Id));
@@ -103,14 +102,16 @@ public class AnimalTests : GameRequiredTest
         rabbitInstance.HungerLevel = 10;
         rabbitInstance.ThirstLevel = 16;
         
-        await using var db = await GameService.CreateDbContextAsync();
-        var update = await GameService.AnimalService.UpdateAnimal(db, rabbitInstance);
+        var update = await GameService.UpdateAnimal(rabbitInstance);
         Assert.That(update.IsNone, Is.True);
         
-        var newRabbit = await GameService.AnimalService.GetAnimalById(db, rabbitInstance.Id);
+        var newRabbit = await GameService.GetAnimalById(rabbitInstance.Id);
         Assert.That(newRabbit.HasValue, Is.True);
         var r = newRabbit.GetValueOrThrow();
-        Assert.That(r, Is.EqualTo(rabbitInstance));
+        Assert.That(r.HasChip, Is.True);
+        Assert.That(r.Health, Is.EqualTo(90));
+        Assert.That(r.HungerLevel, Is.EqualTo(10));
+        Assert.That(r.ThirstLevel, Is.EqualTo(16));
     }
 
     [Test]
@@ -134,12 +135,11 @@ public class AnimalTests : GameRequiredTest
             Price = 100
         };
 
-        await using (var db = await GameService.CreateDbContextAsync())
         {
-            var result1 = await GameService.AnimalService.CreateAnimalType(db, rabbit);
+            var result1 = await GameService.CreateAnimalType(rabbit);
             Assert.That(result1.IsSome, Is.False);
             
-            var result2 = await GameService.MapObjectService.CreateMapObjectType(db, lake);
+            var result2 = await GameService.CreateMapObjectType(lake);
             Assert.That(result2.IsSome, Is.False);
         }
 
@@ -153,37 +153,36 @@ public class AnimalTests : GameRequiredTest
         var lake2 = (await GameService.PurchaseMapObject(game, lake)).GetValueOrThrow();
         var lake3 = (await GameService.PurchaseMapObject(game, lake)).GetValueOrThrow();
 
-        await using (var db = await GameService.CreateDbContextAsync())
         {
             {
-                var rabbitKnown1 = await GameService.AnimalService.GetDiscoveredMapObjects(db, rabbit1);
+                var rabbitKnown1 = await GameService.GetDiscoveredMapObjects(rabbit1);
                 Assert.That(rabbitKnown1.Count, Is.EqualTo(0));
-                var rabbitKnown2 = await GameService.AnimalService.GetDiscoveredMapObjects(db, rabbit2);
+                var rabbitKnown2 = await GameService.GetDiscoveredMapObjects(rabbit2);
                 Assert.That(rabbitKnown2.Count, Is.EqualTo(0));
-                var rabbitKnown3 = await GameService.AnimalService.GetDiscoveredMapObjects(db, rabbit3);
+                var rabbitKnown3 = await GameService.GetDiscoveredMapObjects(rabbit3);
                 Assert.That(rabbitKnown3.Count, Is.EqualTo(0));
             }
 
-            var disc1 = await GameService.AnimalService.DiscoverMapObject(db, rabbit1, lake1);
+            var disc1 = await GameService.DiscoverMapObject(rabbit1, lake1);
             Assert.That(disc1.IsSome, Is.False);
-            var disc2 = await GameService.AnimalService.DiscoverMapObject(db, rabbit2, lake1);
+            var disc2 = await GameService.DiscoverMapObject(rabbit2, lake1);
             Assert.That(disc2.IsSome, Is.False);
-            var disc3 = await GameService.AnimalService.DiscoverMapObject(db, rabbit2, lake2);
+            var disc3 = await GameService.DiscoverMapObject(rabbit2, lake2);
             Assert.That(disc3.IsSome, Is.False);
 
             {
-                var rabbitKnown1 = (await GameService.AnimalService.GetDiscoveredMapObjects(db, rabbit1)).ToList();
+                var rabbitKnown1 = (await GameService.GetDiscoveredMapObjects(rabbit1)).ToList();
                 Assert.That(rabbitKnown1.Count, Is.EqualTo(1));
                 Assert.That(rabbitKnown1.First().Id, Is.EqualTo(lake1.Id));
-                var rabbitKnown2 = (await GameService.AnimalService.GetDiscoveredMapObjects(db, rabbit2)).ToList();
+                var rabbitKnown2 = (await GameService.GetDiscoveredMapObjects(rabbit2)).ToList();
                 Assert.That(rabbitKnown2.Count, Is.EqualTo(2));
                 Assert.That(rabbitKnown2[0].Id, Is.EqualTo(lake1.Id));
                 Assert.That(rabbitKnown2[1].Id, Is.EqualTo(lake2.Id));
-                var rabbitKnown3 = await GameService.AnimalService.GetDiscoveredMapObjects(db, rabbit3);
+                var rabbitKnown3 = await GameService.GetDiscoveredMapObjects(rabbit3);
                 Assert.That(rabbitKnown3.Count, Is.EqualTo(0));
             }
 
-            await db.Entry(lake3).Collection(o=> o.DiscoveredByAnimals).LoadAsync();
+            await GameService.LoadCollection(lake3, o => o.DiscoveredByAnimals);
             Assert.That(lake3.DiscoveredByAnimals.Count, Is.EqualTo(0));
         }
     }
@@ -202,8 +201,7 @@ public class AnimalTests : GameRequiredTest
     
     private async Task CreateAnimalType(AnimalType type)
     {
-        await using var db = await GameService.CreateDbContextAsync();
-        var result = await GameService.AnimalService.CreateAnimalType(db, type);
+        var result = await GameService.CreateAnimalType(type);
         Assert.That(result.IsSome, Is.False);
     }
 }

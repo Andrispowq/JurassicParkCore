@@ -18,25 +18,23 @@ public class AnimalTypeTests : UnitTestBase
             Price = 100,
             VisitorSatisfaction = 100
         };
-        
-        await using var db = await GameService.CreateDbContextAsync();
 
-        var all = GameService.AnimalService.GetAllAnimalTypes(db);
+        var all = await GameService.GetAnimalTypes();
         Assert.That(all.Count(), Is.EqualTo(0));
         
-        var result = await GameService.AnimalService.CreateAnimalType(db, type);
+        var result = await GameService.CreateAnimalType(type);
         Assert.That(result.IsNone, Is.True);
 
-        all = GameService.AnimalService.GetAllAnimalTypes(db).ToList();
+        all = (await GameService.GetAnimalTypes()).ToList();
         Assert.That(all.Count, Is.EqualTo(1));
         Assert.That(all, Is.EquivalentTo(new[] { type }));
         
-        var result2 = await GameService.AnimalService.CreateAnimalType(db, type);
+        var result2 = await GameService.CreateAnimalType(type);
         Assert.That(result2.IsSome, Is.True);
         var errorType = result2.AsSome.Value;
         Assert.That(errorType, Is.TypeOf<ConflictError>());
 
-        all = GameService.AnimalService.GetAllAnimalTypes(db).ToList();
+        all = (await GameService.GetAnimalTypes()).ToList();
         Assert.That(all.Count, Is.EqualTo(1));
         Assert.That(all, Is.EquivalentTo(new[] { type }));
     }
