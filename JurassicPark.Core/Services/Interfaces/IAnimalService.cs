@@ -10,6 +10,7 @@ public interface IAnimalService
     public Task<Option<ServiceError>> CreateAnimalType(JurassicParkDbContext context, AnimalType animalType);
     //Animals
     public IEnumerable<Animal> GetAnimals(JurassicParkDbContext context, SavedGame savedGame);
+    public Task<Result<Animal, ServiceError>> GetAnimalById(JurassicParkDbContext context, long animalId);
     public Task<Option<ServiceError>> CreateAnimal(JurassicParkDbContext context, SavedGame savedGame, Animal animal);
     public Task<Option<ServiceError>> UpdateAnimal(JurassicParkDbContext context, Animal animal);
     //Groups
@@ -18,4 +19,7 @@ public interface IAnimalService
     public Task<Option<ServiceError>> DeleteGroup(JurassicParkDbContext context, AnimalGroup group);
     public Task<Option<ServiceError>> AddAnimalToGroup(JurassicParkDbContext context, Animal animal, AnimalGroup group);
     public Task<Option<ServiceError>> RemoveAnimalFromGroup(JurassicParkDbContext context, Animal animal, AnimalGroup group);
+    //Discoveries
+    public Task<IEnumerable<MapObject>> GetDiscoveredMapObjects(JurassicParkDbContext context, Animal animal);
+    public Task<Option<ServiceError>> DiscoverMapObject(JurassicParkDbContext context, Animal animal, MapObject mapObject);
 }

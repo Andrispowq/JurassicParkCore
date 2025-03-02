@@ -11,7 +11,8 @@ public class GameService(
     IJeepService jeepService,
     IMapObjectService mapObjectService,
     IPositionService positionService,
-    ITransactionService transactionService) : IGameService
+    ITransactionService transactionService,
+    IRandomValueProvider randomValueProvider) : IGameService
 {
     public IAnimalService AnimalService => animalService;
     public IJeepService JeepService => jeepService;
@@ -82,26 +83,26 @@ public class GameService(
             //If the game is not specified, clear everything
             if (savedGame is null)
             {
-                await db.Animals.All.ExecuteDeleteAsync();
+                //await db.Animals.All.ExecuteDeleteAsync();
                 await db.AnimalTypes.All.ExecuteDeleteAsync();
-                await db.AnimalGroups.All.ExecuteDeleteAsync();
-                await db.Jeeps.All.ExecuteDeleteAsync();
-                await db.JeepRoutes.All.ExecuteDeleteAsync();
-                await db.MapObjects.All.ExecuteDeleteAsync();
+                //await db.AnimalGroups.All.ExecuteDeleteAsync();
+                //await db.Jeeps.All.ExecuteDeleteAsync();
+                //await db.JeepRoutes.All.ExecuteDeleteAsync();
+                //await db.MapObjects.All.ExecuteDeleteAsync();
                 await db.MapObjectTypes.All.ExecuteDeleteAsync();
                 await db.Positions.All.ExecuteDeleteAsync();
                 await db.SavedGames.All.ExecuteDeleteAsync();
-                await db.Transactions.All.ExecuteDeleteAsync();
+                //await db.Transactions.All.ExecuteDeleteAsync();
             }
             else
             {
-                await db.Animals.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
-                await db.AnimalGroups.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
-                await db.Jeeps.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
-                await db.JeepRoutes.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
-                await db.MapObjects.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
+                //await db.Animals.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
+                //await db.AnimalGroups.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
+                //await db.Jeeps.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
+                //await db.JeepRoutes.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
+                //await db.MapObjects.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
                 await db.SavedGames.All.Where(o => o.Id == savedGame.Id).ExecuteDeleteAsync();
-                await db.Transactions.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
+                //await db.Transactions.All.Where(o => o.SavedGameId == savedGame.Id).ExecuteDeleteAsync();
             }
 
             await transaction.CommitAsync();
@@ -208,8 +209,8 @@ public class GameService(
             {
                 Name = $"{type.Name}#{Utils.GeneratePassword(1, 4, Utils.Numbers)}",
                 AnimalTypeId = type.Id,
-                Sex = AnimalSex.Male,
-                Age = 5,
+                Sex = randomValueProvider.GetSexFor(type),
+                Age = 0,
                 HasChip = false,
                 Group = null,
                 Health = 100,

@@ -3,6 +3,7 @@ using System;
 using JurassicPark.Core.DataSchemas;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JurassicPark.Core.Migrations
 {
     [DbContext(typeof(JurassicParkDbContext))]
-    partial class JurassicParkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250217122145_AllowedNullPositionMapObject")]
+    partial class AllowedNullPositionMapObject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
@@ -123,21 +126,6 @@ namespace JurassicPark.Core.Migrations
                         .IsUnique();
 
                     b.ToTable("AnimalTypeTable");
-                });
-
-            modelBuilder.Entity("JurassicPark.Core.DataSchemas.Discovered", b =>
-                {
-                    b.Property<long>("AnimalId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("MapObjectId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("AnimalId", "MapObjectId");
-
-                    b.HasIndex("MapObjectId");
-
-                    b.ToTable("DiscoveredTable");
                 });
 
             modelBuilder.Entity("JurassicPark.Core.DataSchemas.Jeep", b =>
@@ -402,25 +390,6 @@ namespace JurassicPark.Core.Migrations
                     b.Navigation("SavedGame");
                 });
 
-            modelBuilder.Entity("JurassicPark.Core.DataSchemas.Discovered", b =>
-                {
-                    b.HasOne("JurassicPark.Core.DataSchemas.Animal", "Animal")
-                        .WithMany("DiscoveredMapObjects")
-                        .HasForeignKey("AnimalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JurassicPark.Core.DataSchemas.MapObject", "MapObject")
-                        .WithMany("DiscoveredByAnimals")
-                        .HasForeignKey("MapObjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Animal");
-
-                    b.Navigation("MapObject");
-                });
-
             modelBuilder.Entity("JurassicPark.Core.DataSchemas.Jeep", b =>
                 {
                     b.HasOne("JurassicPark.Core.DataSchemas.JeepRoute", "Route")
@@ -492,11 +461,6 @@ namespace JurassicPark.Core.Migrations
                     b.Navigation("SavedGame");
                 });
 
-            modelBuilder.Entity("JurassicPark.Core.DataSchemas.Animal", b =>
-                {
-                    b.Navigation("DiscoveredMapObjects");
-                });
-
             modelBuilder.Entity("JurassicPark.Core.DataSchemas.AnimalGroup", b =>
                 {
                     b.Navigation("Animals");
@@ -505,11 +469,6 @@ namespace JurassicPark.Core.Migrations
             modelBuilder.Entity("JurassicPark.Core.DataSchemas.JeepRoute", b =>
                 {
                     b.Navigation("RoutePositions");
-                });
-
-            modelBuilder.Entity("JurassicPark.Core.DataSchemas.MapObject", b =>
-                {
-                    b.Navigation("DiscoveredByAnimals");
                 });
 
             modelBuilder.Entity("JurassicPark.Core.DataSchemas.SavedGame", b =>

@@ -5,6 +5,39 @@ namespace JurassicParkTester;
 
 public class GameMocker(IGameService gameService)
 {
+    public async Task Run()
+    {
+        while (true)
+        {
+            var input = Console.ReadLine();
+            if (input is null) return;
+
+            input = input.Trim().ToLower();
+            if (input == "quit")
+            {
+                break;
+            }
+
+            if (input.StartsWith("prune "))
+            {
+                var gameName = input.Substring("prune ".Length);
+                var game = await gameService.GetSavedGameByName(gameName);
+                if (game.IsError)
+                {
+                    Console.WriteLine("Game not found");
+                    continue;
+                }
+
+                await gameService.PruneDatabase(game.GetValueOrThrow());
+            }
+
+            if (input == "run")
+            {
+                await MockGame();
+            }
+        }
+    }
+    
     public async Task MockGame()
     {
         var trex = new AnimalType

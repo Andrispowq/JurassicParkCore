@@ -16,4 +16,6 @@ public record MapObject : IKeyedDataType
     public virtual SavedGame SavedGame { get; set; } = null!;
     public virtual Position Position { get; set; } = null!;
     public virtual MapObjectType MapObjectType { get; set; } = null!;
+
+    public virtual ICollection<Discovered> DiscoveredByAnimals { get; set; } = [];
 }

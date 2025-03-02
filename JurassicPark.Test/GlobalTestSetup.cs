@@ -1,6 +1,5 @@
+using JurassicPark.Core;
 using JurassicPark.Core.DataSchemas;
-using JurassicPark.Core.Services;
-using JurassicPark.Core.Services.Interfaces;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,21 +21,16 @@ public class GlobalTestSetup
         var services = new ServiceCollection();
 
         services.AddDbContext<JurassicParkDbContext>(options =>
-            options.UseSqlite(SharedConnection));
+            options.UseSqlite(SharedConnection)
+                .EnableSensitiveDataLogging());
 
         services.AddScoped<IDbContextFactory<JurassicParkDbContext>>(sp =>
         {
             var options = sp.GetRequiredService<DbContextOptions<JurassicParkDbContext>>();
             return new TestDbContextFactory(options);
         });
-
-        services.AddScoped<IAnimalService, AnimalService>();
-        services.AddScoped<IJeepService, JeepService>();
-        services.AddScoped<IMapObjectService, MapObjectService>();
-        services.AddScoped<IPositionService, PositionService>();
-        services.AddScoped<ITransactionService, TransactionService>();
         
-        services.AddScoped<IGameService, GameService>();
+        services.AddCoreServices();
 
         ServiceProvider = services.BuildServiceProvider();
 

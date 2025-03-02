@@ -1,8 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-
+﻿using JurassicPark.Core;
 using JurassicPark.Core.DataSchemas;
-using JurassicPark.Core.Services;
-using JurassicPark.Core.Services.Interfaces;
 using JurassicParkTester;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,18 +11,9 @@ SQLitePCL.Batteries.Init();
 using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((_, services) =>
     {
-        services.AddPooledDbContextFactory<JurassicParkDbContext>(options =>
-        {
-            options.UseSqlite("Data Source=JurassicParkTest.db");
-        });
+        services.AddDatabase(new CoreConfiguration());
+        services.AddCoreServices();
         
-        services.AddScoped<IAnimalService, AnimalService>();
-        services.AddScoped<IJeepService, JeepService>();
-        services.AddScoped<IMapObjectService, MapObjectService>();
-        services.AddScoped<IPositionService, PositionService>();
-        services.AddScoped<ITransactionService, TransactionService>();
-        
-        services.AddScoped<IGameService, GameService>();
         services.AddScoped<GameMocker, GameMocker>();
     }).ConfigureLogging(logging =>
     {
@@ -41,7 +29,7 @@ using (var scope = host.Services.CreateScope())
     await dbContext.Database.MigrateAsync();
     
     var service = scope.ServiceProvider.GetRequiredService<GameMocker>();
-    await service.MockGame();
+    await service.Run();
 }
 
 await host.RunAsync();

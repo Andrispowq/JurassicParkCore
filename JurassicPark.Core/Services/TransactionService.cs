@@ -9,7 +9,7 @@ public class TransactionService : ITransactionService
     public IEnumerable<Transaction> GetTransactionsFromLastCheckpoint(JurassicParkDbContext context, SavedGame savedGame)
     {
         var transactions = context.Transactions.All
-            .Where(t => t.SavedGame.Id == savedGame.Id)
+            .Where(t => t.SavedGameId == savedGame.Id)
             .OrderBy(t => t.CreatedAt);
         var lastCheckpoint = transactions.LastOrDefault(t => t.Type == TransactionType.Checkpoint);
         if (lastCheckpoint is null)
@@ -19,7 +19,8 @@ public class TransactionService : ITransactionService
         }
 
         //Return all those that are after the checkpoint (including it)
-        return transactions.SkipWhile(t => t.Id < lastCheckpoint.Id);
+        var skipCount = transactions.Count(t => t.Id < lastCheckpoint.Id);
+        return transactions.Skip(skipCount);
     }
 
     public IEnumerable<Transaction> GetAllTransactions(JurassicParkDbContext context, SavedGame savedGame)
@@ -47,7 +48,7 @@ public class TransactionService : ITransactionService
         return startingAmount + saleSum - purchaseSum;
     }
 
-    public async Task<Result<decimal, ServiceError>> CreateCheckpoint(JurassicParkDbContext context, SavedGame savedGame)
+    public async Task<Result<Transaction, ServiceError>> CreateCheckpoint(JurassicParkDbContext context, SavedGame savedGame)
     {
         if (savedGame.GameState != GameState.Ongoing)
         {
@@ -69,9 +70,9 @@ public class TransactionService : ITransactionService
         };
         
         var createResult = await context.Transactions.Create(checkpoint);
-        return createResult.Map<Result<decimal, ServiceError>>(
+        return createResult.Map<Result<Transaction, ServiceError>>(
             error => new ConflictError(error.Message),
-            () => balance);
+            () => checkpoint);
     }
 
     public async Task<Option<ServiceError>> CreateTransaction(JurassicParkDbContext context, SavedGame savedGame, 

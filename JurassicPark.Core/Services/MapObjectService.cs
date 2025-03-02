@@ -33,8 +33,7 @@ public class MapObjectService : IMapObjectService
             return new UnauthorizedError("Game is over");
         }
 
-        await context.Entry(mapObject).Reference(a => a.SavedGame).LoadAsync();
-        if (mapObject.SavedGame.GameState != GameState.Ongoing)
+        if (savedGame.GameState != GameState.Ongoing)
         {
             return new UnauthorizedError("Game is over");
         }

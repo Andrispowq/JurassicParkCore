@@ -3,31 +3,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JurassicPark.Core.DataSchemas.DataTable;
 
-public interface IDataTable<T>
-    where T : class, IKeyedDataType
+public interface IKeylessDataTable<in T>
+    where T : class
 {
-    public Task<Result<T, DatabaseError>> Get(long id);
     public Task<Option<DatabaseError>> Create(T instance);
     public Task<Option<DatabaseError>> Update(T instance);
     public Task<Option<DatabaseError>> Delete(T instance);
 }
 
-public class DataTable<T>(DbContext context, DbSet<T> dbSet) : IDataTable<T>
-    where T : class, IKeyedDataType
+public class DiscoveriesDataTable(DbContext context, DbSet<Discovered> dbSet) : IKeylessDataTable<Discovered>
 {
-    public DbSet<T> All { get; } = dbSet;
+    public DbSet<Discovered> All { get; } = dbSet;
 
-    public async Task<Result<T, DatabaseError>> Get(long id)
+    private async Task<Discovered?> FindAsync(Discovered discovered)
     {
-        var item = await All.FindAsync(id);
-        if (item is null) return new EntryNotFoundError();
-        
-        return item;
+        return await All.FindAsync(discovered.AnimalId, discovered.MapObjectId);
     }
-    
-    public async Task<Option<DatabaseError>> Create(T instance)
+
+    public async Task<Option<DatabaseError>> Create(Discovered instance)
     {
-        var existing = await All.FindAsync(instance.Id);
+        var existing = await FindAsync(instance);
         if (existing is not null)
         {
             return new EntryAlreadyExistsError();
@@ -46,9 +41,9 @@ public class DataTable<T>(DbContext context, DbSet<T> dbSet) : IDataTable<T>
         }
     }
     
-    public async Task<Option<DatabaseError>> Update(T instance)
+    public async Task<Option<DatabaseError>> Update(Discovered instance)
     {
-        var existing = await All.FindAsync(instance.Id);
+        var existing = await FindAsync(instance);
         if (existing is null)
         {
             return new EntryNotFoundError();
@@ -67,9 +62,9 @@ public class DataTable<T>(DbContext context, DbSet<T> dbSet) : IDataTable<T>
         }
     }
     
-    public async Task<Option<DatabaseError>> Delete(T instance)
+    public async Task<Option<DatabaseError>> Delete(Discovered instance)
     {
-        var existing = await All.FindAsync(instance.Id);
+        var existing = await FindAsync(instance);
         if (existing is null)
         {
             return new EntryNotFoundError();

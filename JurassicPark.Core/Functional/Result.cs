@@ -1,14 +1,14 @@
 namespace JurassicPark.Core.Functional;
 
-public sealed class Result<T, E>
+public sealed class Result<T, TE>
 {
     private readonly T _result;
-    private readonly E _error;
+    private readonly TE _error;
 
-    public bool HasValue { get; private init; }
-    public bool IsError { get; private init; }
+    public bool HasValue { get; }
+    public bool IsError { get; }
 
-    public Result(T result)
+    private Result(T result)
     {
         _result = result ?? throw new ArgumentNullException(nameof(result));
         _error = default!;
@@ -16,7 +16,7 @@ public sealed class Result<T, E>
         IsError = false;
     }
 
-    public Result(E error)
+    private Result(TE error)
     {
         _error = error ?? throw new ArgumentNullException(nameof(error));
         _result = default!;
@@ -24,7 +24,7 @@ public sealed class Result<T, E>
         IsError = true;
     }
 
-    public void Match(Action<T> result, Action<E> error)
+    public void Match(Action<T> result, Action<TE> error)
     {
         if (HasValue)
             result(_result!);
@@ -34,32 +34,24 @@ public sealed class Result<T, E>
             throw new InvalidOperationException("Result must contain either a value or an error.");
     }
 
-    public Result<U, E> Map<U>(Func<T, U> map)
+    public Result<TU, TE> Map<TU>(Func<T, TU> map)
     {
-        if (HasValue)
-            return new Result<U, E>(map(_result!));
-        return new Result<U, E>(_error!);
+        return HasValue ? new Result<TU, TE>(map(_result!)) : new Result<TU, TE>(_error!);
     }
 
-    public Result<T, F> MapError<F>(Func<E, F> map)
+    public Result<T, TF> MapError<TF>(Func<TE, TF> map)
     {
-        if (IsError)
-            return new Result<T, F>(map(_error!));
-        return new Result<T, F>(_result!);
+        return IsError ? new Result<T, TF>(map(_error!)) : new Result<T, TF>(_result!);
     }
 
-    public R Map<R>(Func<T, R> action, Func<E, R> errorAction)
+    public TR Map<TR>(Func<T, TR> action, Func<TE, TR> errorAction)
     {
-        if (HasValue)
-            return action(_result!);
-        return errorAction(_error!);
+        return HasValue ? action(_result!) : errorAction(_error!);
     }
 
-    public Task<R> MapAsync<R>(Func<T, Task<R>> action, Func<E, Task<R>> errorAction)
+    public Task<TR> MapAsync<TR>(Func<T, Task<TR>> action, Func<TE, Task<TR>> errorAction)
     {
-        if (HasValue)
-            return action(_result!);
-        return errorAction(_error!);
+        return HasValue ? action(_result!) : errorAction(_error!);
     }
 
     public T GetValueOrThrow()
@@ -69,7 +61,7 @@ public sealed class Result<T, E>
         throw new InvalidOperationException("No result present.");
     }
 
-    public E GetErrorOrThrow()
+    public TE GetErrorOrThrow()
     {
         if (IsError)
             return _error!;
@@ -87,7 +79,7 @@ public sealed class Result<T, E>
 
     public override bool Equals(object? obj)
     {
-        if (obj is not Result<T, E> other)
+        if (obj is not Result<T, TE> other)
             return false;
 
         if (HasValue && other.HasValue)
@@ -110,29 +102,29 @@ public sealed class Result<T, E>
         return 0;
     }
 
-    public static implicit operator Result<T, E>(T result)
+    public static implicit operator Result<T, TE>(T result)
     {
-        return new Result<T, E>(result);
+        return new Result<T, TE>(result);
     }
 
-    public static implicit operator Result<T, E>(E error)
+    public static implicit operator Result<T, TE>(TE error)
     {
-        return new Result<T, E>(error);
+        return new Result<T, TE>(error);
     }
 
-    public static Result<T, E> Success(T result) => new Result<T, E>(result);
-    public static Result<T, E> Failure(E error) => new Result<T, E>(error);
+    public static Result<T, TE> Success(T result) => new Result<T, TE>(result);
+    public static Result<T, TE> Failure(TE error) => new Result<T, TE>(error);
 }
 
 public static class ResultExtensions
 {
-    public static Result<T, E> AsResult<T, E>(this T value)
+    public static Result<T, TE> AsResult<T, TE>(this T value)
     {
-        return Result<T, E>.Success(value);
+        return Result<T, TE>.Success(value);
     }
 
-    public static Result<T, E> AsError<T, E>(this E error)
+    public static Result<T, TE> AsError<T, TE>(this TE error)
     {
-        return Result<T, E>.Failure(error);
+        return Result<T, TE>.Failure(error);
     }
 }

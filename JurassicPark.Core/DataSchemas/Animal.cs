@@ -27,4 +27,6 @@ public record Animal : IKeyedDataType
     public virtual AnimalType AnimalType { get; set; } = null!;
     public virtual Position? Position { get; set; }
     public virtual AnimalGroup? Group { get; set; }
+
+    public virtual ICollection<Discovered> DiscoveredMapObjects { get; set; } = [];
 }

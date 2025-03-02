@@ -23,6 +23,13 @@ public class AnimalService : IAnimalService
         return context.Animals.All.Where(a => a.SavedGame.Id == savedGame.Id);
     }
 
+    public async Task<Result<Animal, ServiceError>> GetAnimalById(JurassicParkDbContext context, long animalId)
+    {
+        var animal = await context.Animals.Get(animalId);
+        return animal.Map<Result<Animal, ServiceError>>(value => value, 
+            error => new NotFoundError(error.Message));
+    }
+
     public async Task<Option<ServiceError>> CreateAnimal(JurassicParkDbContext context, SavedGame savedGame, Animal animal)
     {
         if (savedGame.Id != animal.SavedGameId)
@@ -134,5 +141,52 @@ public class AnimalService : IAnimalService
         
         var result = await context.Animals.Update(animal);
         return result.MapOption<ServiceError>(error => new NotFoundError(error.Message));
+    }
+
+    public async Task<IEnumerable<MapObject>> GetDiscoveredMapObjects(JurassicParkDbContext context, Animal animal)
+    {
+        List<MapObject> mapObjects = new();
+
+        var discovered = context.Discoveries.All
+            .Where(d => d.AnimalId == animal.Id);
+        
+        foreach (var discovery in discovered)
+        {
+            await context.Entry(discovery).Reference(a => a.MapObject).LoadAsync();
+            mapObjects.Add(discovery.MapObject);
+        }
+        
+        return mapObjects;
+    }
+
+    public async Task<Option<ServiceError>> DiscoverMapObject(JurassicParkDbContext context, Animal animal, MapObject mapObject)
+    {
+        await context.Entry(animal).Reference(a => a.SavedGame).LoadAsync();
+        if (animal.SavedGame.GameState != GameState.Ongoing)
+        {
+            return new UnauthorizedError("Game is over");
+        }
+
+        if (animal.SavedGameId != mapObject.SavedGameId)
+        {
+            return new UnauthorizedError("Mismatch in games");
+        }
+        
+        await context.Entry(animal).Collection(a => a.DiscoveredMapObjects).LoadAsync();
+        if (animal.DiscoveredMapObjects.Any(d => d.MapObjectId == mapObject.Id))
+        {
+            return new ConflictError("This object is already discovered");
+        }
+
+        var discovery = new Discovered
+        {
+            AnimalId = animal.Id,
+            MapObjectId = mapObject.Id
+        };
+        
+        var error = await context.Discoveries.Create(discovery);
+        if (error.IsSome) return new ConflictError(error.AsSome.Value.Message);
+            
+        return new Option<ServiceError>.None();
     }
 }
