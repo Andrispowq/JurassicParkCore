@@ -937,7 +937,7 @@
           "buildTransitive/net8.0/System.Text.Json.targets": {}
         }
       },
-      "JurassicPark.Core/1.0.0": {
+      "JurassicPark.Core.DataAccess/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
@@ -948,10 +948,10 @@
           "SQLitePCLRaw.core": "2.1.10"
         },
         "compile": {
-          "bin/placeholder/JurassicPark.Core.dll": {}
+          "bin/placeholder/JurassicPark.Core.DataAccess.dll": {}
         },
         "runtime": {
-          "bin/placeholder/JurassicPark.Core.dll": {}
+          "bin/placeholder/JurassicPark.Core.DataAccess.dll": {}
         }
       }
     }
@@ -2205,15 +2205,15 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "JurassicPark.Core/1.0.0": {
+    "JurassicPark.Core.DataAccess/1.0.0": {
       "type": "project",
-      "path": "../JurassicPark.Core/JurassicPark.Core.csproj",
-      "msbuildProject": "../JurassicPark.Core/JurassicPark.Core.csproj"
+      "path": "../JurassicPark.Core.DataAccess/JurassicPark.Core.DataAccess.csproj",
+      "msbuildProject": "../JurassicPark.Core.DataAccess/JurassicPark.Core.DataAccess.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "JurassicPark.Core >= 1.0.0",
+      "JurassicPark.Core.DataAccess >= 1.0.0",
       "Microsoft.EntityFrameworkCore.Sqlite >= 9.0.1",
       "Microsoft.Extensions.Hosting >= 9.0.1"
     ]
@@ -2243,8 +2243,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicPark.Core/JurassicPark.Core.csproj": {
-              "projectPath": "/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicPark.Core/JurassicPark.Core.csproj"
+            "/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicPark.Core.DataAccess/JurassicPark.Core.DataAccess.csproj": {
+              "projectPath": "/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicPark.Core.DataAccess/JurassicPark.Core.DataAccess.csproj"
             }
           }
         }

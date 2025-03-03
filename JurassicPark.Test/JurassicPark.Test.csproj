@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\JurassicPark.Core\JurassicPark.Core.csproj" />
+      <ProjectReference Include="..\JurassicPark.Core.DataAccess\JurassicPark.Core.DataAccess.csproj" />
     </ItemGroup>
 
 </Project>
