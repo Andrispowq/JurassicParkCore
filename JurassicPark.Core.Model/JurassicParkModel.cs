@@ -1,12 +1,16 @@
 using JurassicPark.Core.DataSchemas;
 using JurassicPark.Core.Functional;
+using JurassicPark.Core.Model.Validators;
 using JurassicPark.Core.Services.Interfaces;
 
 namespace JurassicPark.Core.Model;
 
-public class JurassicParkModel(IGameService gameService) : IJurassicParkModel
+public class JurassicParkModel(IGameService gameService, IRouteValidator routeValidator) : IJurassicParkModel
 {
+    public IGameService GameService => gameService;
+    
     public decimal JeepPrice => 1000;
+    public decimal RouteBlockPrice => 50;
     
     public event EventHandler<SavedGame>? GameCreated; 
     public event EventHandler<string>? GameWarning;
@@ -133,7 +137,7 @@ public class JurassicParkModel(IGameService gameService) : IJurassicParkModel
         await gameService.UpdateGame(SavedGame);
     }
 
-    public async Task<Option<ServiceError>> PurchaseAnimal(AnimalType animalType)
+    public async Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType)
     {
         if (SavedGame is null)
             return new NotFoundError("No game active");
@@ -146,7 +150,7 @@ public class JurassicParkModel(IGameService gameService) : IJurassicParkModel
             Animals.Add(animal.GetValueOrThrow());
         }
         
-        return animal.IsError ? animal.GetErrorOrThrow() : new Option<ServiceError>.None();
+        return animal;
     }
 
     public async Task<Option<ServiceError>> SellAnimal(Animal animal)
@@ -160,11 +164,23 @@ public class JurassicParkModel(IGameService gameService) : IJurassicParkModel
         var original = animal.AnimalType.Price;
         var age = animal.Age;
         var refundPrice = original * (decimal)Math.Cbrt(1.0 / (age + 1));
-        
+
+        Animals.Remove(animal);
         return await gameService.SellAnimal(SavedGame, animal, refundPrice);
     }
 
-    public async Task<Option<ServiceError>> PurchaseMapObject(MapObjectType mapObjectType)
+    public async Task<Option<ServiceError>> KillAnimal(Animal animal)
+    {
+        if (SavedGame is null)
+            return new NotFoundError("No game active");
+        if (SavedGame.GameState != GameState.Ongoing)
+            return new UnauthorizedError("Game is already over");
+
+        Animals.Remove(animal);
+        return await gameService.DeleteAnimal(animal);
+    }
+
+    public async Task<Result<MapObject, ServiceError>> PurchaseMapObject(MapObjectType mapObjectType)
     {
         if (SavedGame is null)
             return new NotFoundError("No game active");
@@ -177,7 +193,7 @@ public class JurassicParkModel(IGameService gameService) : IJurassicParkModel
             MapObjects.Add(obj.GetValueOrThrow());
         }
         
-        return obj.IsError ? obj.GetErrorOrThrow() : new Option<ServiceError>.None();
+        return obj;
     }
 
     public async Task<Option<ServiceError>> SellMapObject(MapObject mapObject)
@@ -193,10 +209,22 @@ public class JurassicParkModel(IGameService gameService) : IJurassicParkModel
         var resourcePercent = mapObject.ResourceAmount / mapObject.MapObjectType.ResourceAmount;
         var refundPrice = original * resourcePercent;
         
+        MapObjects.Remove(mapObject);
         return await gameService.SellMapObject(SavedGame, mapObject, refundPrice);
     }
 
-    public async Task<Option<ServiceError>> PurchaseJeep()
+    public async Task<Option<ServiceError>> RemoveMapObject(MapObject mapObject)
+    {
+        if (SavedGame is null)
+            return new NotFoundError("No game active");
+        if (SavedGame.GameState != GameState.Ongoing)
+            return new UnauthorizedError("Game is already over");
+
+        MapObjects.Remove(mapObject);
+        return await gameService.DeleteMapObject(mapObject);
+    }
+
+    public async Task<Result<Jeep, ServiceError>> PurchaseJeep()
     {
         if (SavedGame is null)
             return new NotFoundError("No game active");
@@ -209,7 +237,7 @@ public class JurassicParkModel(IGameService gameService) : IJurassicParkModel
             Jeeps.Add(obj.GetValueOrThrow());
         }
         
-        return obj.IsError ? obj.GetErrorOrThrow() : new Option<ServiceError>.None();
+        return obj;
     }
 
     public async Task<Option<ServiceError>> SellJeep(Jeep jeep)
@@ -219,14 +247,63 @@ public class JurassicParkModel(IGameService gameService) : IJurassicParkModel
         if (SavedGame.GameState != GameState.Ongoing)
             return new UnauthorizedError("Game is already over");
         
+        Jeeps.Remove(jeep);
         return await gameService.SellJeep(SavedGame, jeep, JeepPrice);
     }
-    
+
+    public async Task<Option<ServiceError>> DuplicateRoute(JeepRoute jeepRoute, Position position)
+    {
+        if (SavedGame is null)
+            return new NotFoundError("No game active");
+        if (SavedGame.GameState != GameState.Ongoing)
+            return new UnauthorizedError("Game is already over");
+        
+        var contains = await routeValidator.IsPositionOnRoute(jeepRoute, position);
+        if (!contains) return new BadRequestError("Route doesn't have this position");
+        
+        //TODO
+        throw new NotImplementedException();
+    }
+
+    public async Task<Option<ServiceError>> PurchaseRoadBlock(JeepRoute jeepRoute, Position position)
+    {
+        if (SavedGame is null)
+            return new NotFoundError("No game active");
+        if (SavedGame.GameState != GameState.Ongoing)
+            return new UnauthorizedError("Game is already over");
+        
+        var canPurchase = await routeValidator.CanAddRouteBlock(jeepRoute, position);
+        if (!canPurchase)
+        {
+            return new BadRequestError("Can not remove any more elements");
+        } 
+        
+        //TODO
+        return new Option<ServiceError>.None();
+    }
+
+    public async Task<Option<ServiceError>> SellRoadBlock(JeepRoute jeepRoute)
+    {
+        if (SavedGame is null)
+            return new NotFoundError("No game active");
+        if (SavedGame.GameState != GameState.Ongoing)
+            return new UnauthorizedError("Game is already over");
+
+        var canRemove = await routeValidator.CanRemoveElement(jeepRoute);
+        if (canRemove)
+        {
+            //TODO remove
+            //TODO is empty, delete
+        }
+        
+        return  new BadRequestError("Can not remove any more elements");
+    }
+
     public async Task UpdateAsync(double delta)
     {
         if (SavedGame?.GameState != GameState.Ongoing)
             return;
         
-        await Task.CompletedTask;
+        throw new NotImplementedException();
     }  
 }

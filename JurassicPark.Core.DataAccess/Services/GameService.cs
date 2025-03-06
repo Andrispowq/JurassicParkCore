@@ -261,6 +261,7 @@ public class GameService(
                 Health = 100,
                 HungerLevel = 0,
                 ThirstLevel = 0,
+                State = AnimalState.Digesting,
                 PositionId = null,
                 SavedGameId = game.Id
             };

@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using JurassicPark.Core.DataSchemas;
 using JurassicPark.Core.Services.Interfaces;
 
@@ -24,5 +25,12 @@ public class RandomValueProvider : IRandomValueProvider
         var def = AnimalSex.Male;
         _previousSexGenerated[animalType] = def;
         return def;
+    }
+
+    public bool RollDice(double threshold)
+    {
+        var number = RandomNumberGenerator.GetInt32(0, int.MaxValue);
+        var percent = (double)number / int.MaxValue;
+        return percent >= threshold;
     }
 }
