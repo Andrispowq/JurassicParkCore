@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JurassicPark.Core.DataAcces
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JurassicPark.Playground", "JurassicPark.Playground\JurassicPark.Playground.csproj", "{34666D23-F3B9-403C-B50D-807B0DE71E8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JurassicPark.Test", "JurassicPark.Test\JurassicPark.Test.csproj", "{62451A82-D7D7-4107-87EB-4777BF6F0B66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JurassicPark.Core.DataAccess.Tests", "JurassicPark.Core.DataAccess.Tests\JurassicPark.Core.DataAccess.Tests.csproj", "{62451A82-D7D7-4107-87EB-4777BF6F0B66}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JurassicPark.Core.Model", "JurassicPark.Core.Model\JurassicPark.Core.Model.csproj", "{F22E01EF-5A58-4F2F-A7CF-A9551DF3B9A7}"
 EndProject
