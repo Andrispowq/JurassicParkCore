@@ -1,0 +1,6 @@
+﻿services:
+  jurassicpark.core.webapi:
+    image: jurassicpark.core.webapi
+    build:
+      context: .
+      dockerfile: JurassicPark.Core.WebAPI/Dockerfile

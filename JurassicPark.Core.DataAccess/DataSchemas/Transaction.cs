@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using JurassicPark.Core.Services.Interfaces;
 
 namespace JurassicPark.Core.DataSchemas;
 
@@ -11,4 +12,9 @@ public record Transaction : IKeyedDataType, ITimestamped
     [Range(0, Double.MaxValue)] public required decimal Amount { get; set; }
 
     public virtual SavedGame SavedGame { get; set; } = null!;
+
+    public Task LoadNavigationProperties(IGameService service)
+    {
+        return Task.CompletedTask;
+    }
 }

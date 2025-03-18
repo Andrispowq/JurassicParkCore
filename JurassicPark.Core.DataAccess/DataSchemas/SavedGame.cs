@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using JurassicPark.Core.Services.Interfaces;
 
 namespace JurassicPark.Core.DataSchemas;
 
@@ -23,4 +24,12 @@ public record SavedGame : ITimestamped, IKeyedDataType
     public virtual ICollection<Jeep> Jeeps { get; set; } = [];
     public virtual ICollection<MapObject> MapObjects { get; set; } = [];
     public virtual ICollection<Transaction> Transactions { get; set; } = [];
+    
+    public async Task LoadNavigationProperties(IGameService service)
+    {
+        await service.LoadCollection(this, o => o.Animals);
+        await service.LoadCollection(this, o => o.AnimalGroups);
+        await service.LoadCollection(this, o => o.Jeeps);
+        await service.LoadCollection(this, o => o.MapObjects);
+        }
 }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using JurassicPark.Core.Services.Interfaces;
 
 namespace JurassicPark.Core.DataSchemas;
 
@@ -17,4 +18,9 @@ public record Jeep : IKeyedDataType
     
     public virtual SavedGame SavedGame { get; set; } = null!;
     public virtual JeepRoute? Route { get; set; }
+    
+    public async Task LoadNavigationProperties(IGameService service)
+    {
+        if (RouteId != null) await service.LoadReference(this, o => o.Route);
+    }
 }

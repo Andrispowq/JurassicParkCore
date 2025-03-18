@@ -12,8 +12,7 @@ public static class DependencyInjection
     public static IServiceCollection AddDatabase(this IServiceCollection services, ICoreConfiguration config)
     {
         return services.AddPooledDbContextFactory<JurassicParkDbContext>(options =>
-            options.UseSqlite(config.ConnectionString)
-                .EnableSensitiveDataLogging());
+            options.UseSqlite(config.ConnectionString));
     }
     
     public static IServiceCollection AddCoreServices(this IServiceCollection services)

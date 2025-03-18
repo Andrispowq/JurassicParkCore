@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using JurassicPark.Core.Services.Interfaces;
 
 namespace JurassicPark.Core.DataSchemas;
 
@@ -18,4 +19,10 @@ public record MapObject : IKeyedDataType
     public virtual MapObjectType MapObjectType { get; set; } = null!;
 
     public virtual ICollection<Discovered> DiscoveredByAnimals { get; set; } = [];
+    
+    public async Task LoadNavigationProperties(IGameService service)
+    {
+        await service.LoadReference(this, o => o.MapObjectType);
+        await service.LoadReference(this, o => o.Position);
+    }
 }

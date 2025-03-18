@@ -10,12 +10,6 @@ public interface IJurassicParkModel
     
     decimal JeepPrice { get; }
     decimal RouteBlockPrice { get; }
-    
-    //Game events
-    event EventHandler<SavedGame>? GameCreated; //The Game created 
-    event EventHandler<string>? GameWarning; //The warning message
-    event EventHandler? GameGoalMet; 
-    event EventHandler<bool>? GameOver; //True is win, false is lose
 
     //Game objects
     List<Animal> Animals { get; }
@@ -31,7 +25,7 @@ public interface IJurassicParkModel
 
     //Game stuff
     Task<IEnumerable<SavedGame>> LoadSavedGamesAsync();
-    Task<Option<ServiceError>> LoadGamesAsync(string name);
+    Task<Option<ServiceError>> LoadGameAsync(long id);
     Task<Result<SavedGame, ServiceError>> CreateGameAsync(string name, Difficulty difficulty, long mapWidth, long mapHeight);
     Task<Option<ServiceError>> DeleteGameAsync();
 

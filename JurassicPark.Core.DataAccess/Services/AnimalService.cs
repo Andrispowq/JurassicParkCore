@@ -1,6 +1,7 @@
 using JurassicPark.Core.DataSchemas;
 using JurassicPark.Core.Functional;
 using JurassicPark.Core.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace JurassicPark.Core.Services;
 
@@ -40,7 +41,12 @@ public class AnimalService : IAnimalService
 
     public IEnumerable<Animal> GetAnimals(JurassicParkDbContext context, SavedGame savedGame)
     {
-        return context.Animals.All.Where(a => a.SavedGame.Id == savedGame.Id);
+        return context.Animals.All
+            .Include(a => a.AnimalType)
+            .Include(a => a.Position)
+            .Include(a => a.PointOfInterest)
+            .Include(a => a.Group)
+            .Where(a => a.SavedGame.Id == savedGame.Id);
     }
 
     public async Task<Result<Animal, ServiceError>> GetAnimalById(JurassicParkDbContext context, long animalId)

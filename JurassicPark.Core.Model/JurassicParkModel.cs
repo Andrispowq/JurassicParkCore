@@ -11,11 +11,6 @@ public class JurassicParkModel(IGameService gameService, IRouteValidator routeVa
     
     public decimal JeepPrice => 1000;
     public decimal RouteBlockPrice => 50;
-    
-    public event EventHandler<SavedGame>? GameCreated; 
-    public event EventHandler<string>? GameWarning;
-    public event EventHandler? GameGoalMet;
-    public event EventHandler<bool>? GameOver;
 
     public List<Animal> Animals { get; private set; } = null!;
     public List<AnimalGroup> AnimalGroups { get; private set; } = null!;
@@ -34,12 +29,12 @@ public class JurassicParkModel(IGameService gameService, IRouteValidator routeVa
         return await gameService.GetSavedGames();
     }
 
-    public async Task<Option<ServiceError>> LoadGamesAsync(string name)
+    public async Task<Option<ServiceError>> LoadGameAsync(long id)
     {
         if (SavedGame is not null)
             return new ConflictError("Game already loaded");
         
-        var game = await gameService.GetSavedGameByName(name);
+        var game = await gameService.GetSavedGame(id);
         if (game.IsError)
         {
             return game.GetErrorOrThrow();
