@@ -144,14 +144,22 @@ public class AnimalTests : GameRequiredTest
         }
 
         var game = await CreateGame("asd");
+
+        var position = new Position
+        {
+            X = 1,
+            Y = 2,
+        };
+        var positionResult  = await GameService.CreatePosition(position);
+        Assert.That(positionResult.IsNone, Is.True);
         
-        var rabbit1 = (await GameService.PurchaseAnimal(game, rabbit)).GetValueOrThrow();
-        var rabbit2 = (await GameService.PurchaseAnimal(game, rabbit)).GetValueOrThrow();
-        var rabbit3 = (await GameService.PurchaseAnimal(game, rabbit)).GetValueOrThrow();
+        var rabbit1 = (await GameService.PurchaseAnimal(game, rabbit, position)).GetValueOrThrow();
+        var rabbit2 = (await GameService.PurchaseAnimal(game, rabbit, position)).GetValueOrThrow();
+        var rabbit3 = (await GameService.PurchaseAnimal(game, rabbit, position)).GetValueOrThrow();
         
-        var lake1 = (await GameService.PurchaseMapObject(game, lake)).GetValueOrThrow();
-        var lake2 = (await GameService.PurchaseMapObject(game, lake)).GetValueOrThrow();
-        var lake3 = (await GameService.PurchaseMapObject(game, lake)).GetValueOrThrow();
+        var lake1 = (await GameService.PurchaseMapObject(game, lake, position)).GetValueOrThrow();
+        var lake2 = (await GameService.PurchaseMapObject(game, lake, position)).GetValueOrThrow();
+        var lake3 = (await GameService.PurchaseMapObject(game, lake, position)).GetValueOrThrow();
 
         {
             {
@@ -189,7 +197,15 @@ public class AnimalTests : GameRequiredTest
 
     private async Task<Animal> CreateAnimal(SavedGame game, AnimalType animalType)
     {
-        var purchaseResult = await GameService.PurchaseAnimal(game, animalType);
+        var position = new Position
+        {
+            X = 1,
+            Y = 2,
+        };
+        var positionResult  = await GameService.CreatePosition(position);
+        Assert.That(positionResult.IsNone, Is.True);
+        
+        var purchaseResult = await GameService.PurchaseAnimal(game, animalType, position);
         Assert.That(purchaseResult, Is.Not.Null);
         Assert.That(purchaseResult.HasValue, Is.True);
         

@@ -3,7 +3,7 @@ using JurassicPark.Core.Services.Interfaces;
 
 namespace JurassicParkTester;
 
-public class GameMocker(IGameService gameService)
+public class DataAccessMocker(IGameService gameService)
 {
     public async Task Run()
     {
@@ -88,7 +88,15 @@ public class GameMocker(IGameService gameService)
             }
         }
 
+        var position = new Position
+        {
+            X = 1,
+            Y = 2
+        };
+        
+        (await gameService.CreatePosition(position)).ThrowIfSome();
+
         var game = (await gameService.CreateNewGame(gameName, Difficulty.Medium, 1000, 1000)).GetValueOrThrow();
-        (await gameService.PurchaseAnimal(game, trex)).GetValueOrThrow();
+        (await gameService.PurchaseAnimal(game, trex, position)).GetValueOrThrow();
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JurassicPark.Core.WebAPI.Controllers;
 
 [ApiController]
-[Route("animal_types")]
+[Route("animal-types")]
 public class AnimalTypeController(IGameService gameService) : ControllerBase
 {
     [HttpGet]

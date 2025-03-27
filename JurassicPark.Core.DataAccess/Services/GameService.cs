@@ -238,7 +238,7 @@ public class GameService(
         return await animalService.GetAnimalById(db, id);
     }
 
-    public async Task<Result<Animal, ServiceError>> PurchaseAnimal(SavedGame game, AnimalType type)
+    public async Task<Result<Animal, ServiceError>> PurchaseAnimal(SavedGame game, AnimalType type, Position position)
     {
         if (game.GameState != GameState.Ongoing)
         {
@@ -250,7 +250,7 @@ public class GameService(
 
         try
         {
-            var animal = new Animal()
+            var animal = new Animal
             {
                 Name = $"{type.Name}#{Utils.GeneratePassword(1, 4, Utils.Numbers)}",
                 AnimalTypeId = type.Id,
@@ -262,7 +262,7 @@ public class GameService(
                 HungerLevel = 0,
                 ThirstLevel = 0,
                 State = AnimalState.Digesting,
-                PositionId = null,
+                PositionId = position.Id,
                 SavedGameId = game.Id
             };
 
@@ -594,7 +594,7 @@ public class GameService(
         return await mapObjectService.GetMapObjectById(db, id);
     }
 
-    public async Task<Result<MapObject, ServiceError>> PurchaseMapObject(SavedGame game, MapObjectType type)
+    public async Task<Result<MapObject, ServiceError>> PurchaseMapObject(SavedGame game, MapObjectType type, Position position)
     {
         if (game.GameState != GameState.Ongoing)
         {
@@ -608,7 +608,7 @@ public class GameService(
         {
             var obj = new MapObject
             {
-                PositionId = null,
+                PositionId = position.Id,
                 SavedGameId = game.Id,
                 MapObjectTypeId = type.Id,
                 ResourceAmount = type.ResourceAmount

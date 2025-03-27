@@ -17,15 +17,32 @@ public class AnimalDto(Animal animal)
     public decimal ThirstLevel => animal.ThirstLevel;
     public decimal Health => animal.Health;
 
-    public AnimalTypeDto AnimalTypeDto => new(animal.AnimalType);
-    public PositionDto? Position => animal.Position is null ? null : new(animal.Position);
+    public AnimalTypeDto AnimalType => new(animal.AnimalType);
+    public PositionDto Position => new(animal.Position);
     public PositionDto? PointOfInterest => animal.PointOfInterest is null ? null : new(animal.PointOfInterest);
     public AnimalGroupDto? Group => animal.Group is null ? null : new(animal.Group);
+    
+    public List<MapObjectDto> DiscoveredMapObjects => animal.DiscoveredMapObjects
+        .Select(d => new MapObjectDto(d.MapObject))
+        .ToList();
+}
+
+public class AnimalUpdateRequest
+{
+    public required int Age { get; init; }
+    public required bool HasChip { get; init; }
+    public required AnimalState State { get; init; }
+    
+    public required decimal HungerLevel { get; init; }
+    public required decimal ThirstLevel { get; init; }
+    public required decimal Health { get; init; }
+
+    public required CreatePositionDto Position { get; init; }
 }
 
 public static class AnimalExtensions
 {
-    public static async Task<AnimalDto> ToAnimalDtoAsync(this Animal animal, IGameService service)
+    public static async Task<AnimalDto> ToDtoAsync(this Animal animal, IGameService service)
     {
         await animal.LoadNavigationProperties(service);
         return new AnimalDto(animal);

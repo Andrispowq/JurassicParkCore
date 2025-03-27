@@ -14,7 +14,7 @@ public record Animal : IKeyedDataType
     public required AnimalSex Sex { get; set; }
     public required bool HasChip { get; set; }
     public required long AnimalTypeId { get; set; }
-    public long? PositionId { get; set; }
+    public required long PositionId { get; set; }
     public long? PointOfInterestId { get; set; }
     public required AnimalState State { get; set; }
     
@@ -28,7 +28,7 @@ public record Animal : IKeyedDataType
 
     public virtual SavedGame SavedGame { get; set; } = null!;
     public virtual AnimalType AnimalType { get; set; } = null!;
-    public virtual Position? Position { get; set; }
+    public virtual Position Position { get; set; } = null!;
     public virtual Position? PointOfInterest { get; set; }
     public virtual AnimalGroup? Group { get; set; }
 
@@ -36,8 +36,10 @@ public record Animal : IKeyedDataType
     
     public async Task LoadNavigationProperties(IGameService service)
     {
+        await service.LoadCollection(this, o=> o.DiscoveredMapObjects);
+        
         await service.LoadReference(this, o => o.AnimalType);
-        if (PositionId != null) await service.LoadReference(this, o => o.Position);
+        await service.LoadReference(this, o => o.Position);
         if (PointOfInterestId != null) await service.LoadReference(this, o => o.PointOfInterest);
         if (GroupId != null) await service.LoadReference(this, o => o.Group);
     }

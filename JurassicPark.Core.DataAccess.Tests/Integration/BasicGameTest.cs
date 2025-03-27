@@ -94,6 +94,14 @@ public class BasicGameTest
         Assert.That(game.GameState, Is.EqualTo(GameState.Ongoing));
         Assert.That(game.GameSpeed, Is.EqualTo(GameSpeed.Moderate));
         
+        var position = new Position
+        {
+            X = 1,
+            Y = 2,
+        };
+        var positionResult  = await _gameService.CreatePosition(position);
+        Assert.That(positionResult.IsNone, Is.True);
+        
         {
             var currentBalanceResult = await _gameService.GetCurrentBalance(game);
             Assert.That(currentBalanceResult.HasValue, Is.True);
@@ -104,7 +112,7 @@ public class BasicGameTest
 
         for (int i = 0; i < GameService.InitialMoney / _trex.Price; i++)
         {
-            var purchaseResult = await _gameService.PurchaseAnimal(game, _trex);
+            var purchaseResult = await _gameService.PurchaseAnimal(game, _trex, position);
             Assert.That(purchaseResult.HasValue, Is.True);
         
             var animal = purchaseResult.GetValueOrThrow();
@@ -112,7 +120,7 @@ public class BasicGameTest
         }
         
         //Assert that we cannot go into negatives
-        var finalPurchaseResult = await _gameService.PurchaseAnimal(game, _trex);
+        var finalPurchaseResult = await _gameService.PurchaseAnimal(game, _trex, position);
         Assert.That(finalPurchaseResult.IsError, Is.True);
         
         var error = finalPurchaseResult.GetErrorOrThrow();
@@ -163,8 +171,16 @@ public class BasicGameTest
             var currentBalance = currentBalanceResult.GetValueOrThrow();
             Assert.That(currentBalance, Is.EqualTo(GameService.InitialMoney));
         }
+        
+        var position = new Position
+        {
+            X = 1,
+            Y = 2,
+        };
+        var positionResult  = await _gameService.CreatePosition(position);
+        Assert.That(positionResult.IsNone, Is.True);
 
-        var purchaseResult = await _gameService.PurchaseAnimal(game, _trex);
+        var purchaseResult = await _gameService.PurchaseAnimal(game, _trex, position);
         Assert.That(purchaseResult.HasValue, Is.True);
 
         var animal = purchaseResult.GetValueOrThrow();

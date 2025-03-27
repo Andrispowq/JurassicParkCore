@@ -42,7 +42,7 @@ public interface IGameService
     //Animals
     Task<List<Animal>> GetAnimals(SavedGame game);
     Task<Result<Animal, ServiceError>> GetAnimalById(long id);
-    Task<Result<Animal, ServiceError>> PurchaseAnimal(SavedGame game, AnimalType type);
+    Task<Result<Animal, ServiceError>> PurchaseAnimal(SavedGame game, AnimalType type, Position position);
     Task<Option<ServiceError>> SellAnimal(SavedGame game, Animal animal, decimal refundPrice);
     Task<Option<ServiceError>> UpdateAnimal(Animal animal);
     Task<Option<ServiceError>> DeleteAnimal(Animal animal);
@@ -87,7 +87,7 @@ public interface IGameService
     //MapObjects
     Task<List<MapObject>> GetMapObjects(SavedGame game);
     Task<Result<MapObject, ServiceError>> GetMapObjectById(long id);
-    Task<Result<MapObject, ServiceError>> PurchaseMapObject(SavedGame game, MapObjectType type);
+    Task<Result<MapObject, ServiceError>> PurchaseMapObject(SavedGame game, MapObjectType type, Position position);
     Task<Option<ServiceError>> SellMapObject(SavedGame game, MapObject mapObject, decimal refundPrice);
     Task<Option<ServiceError>> UpdateMapObject(MapObject mapObject);
     Task<Option<ServiceError>> DeleteMapObject(MapObject mapObject);

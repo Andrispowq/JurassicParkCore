@@ -14,7 +14,7 @@ using IHost host = Host.CreateDefaultBuilder(args)
         services.AddDatabase(new CoreConfiguration());
         services.AddCoreServices();
         
-        services.AddScoped<GameMocker, GameMocker>();
+        services.AddScoped<DataAccessMocker, DataAccessMocker>();
     }).ConfigureLogging(logging =>
     {
         logging.ClearProviders();
@@ -28,7 +28,7 @@ using (var scope = host.Services.CreateScope())
     await using var dbContext = dbFactory.CreateDbContext();
     await dbContext.Database.MigrateAsync();
     
-    var service = scope.ServiceProvider.GetRequiredService<GameMocker>();
+    var service = scope.ServiceProvider.GetRequiredService<DataAccessMocker>();
     await service.Run();
 }
 

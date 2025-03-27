@@ -132,14 +132,14 @@ public class JurassicParkModel(IGameService gameService, IRouteValidator routeVa
         await gameService.UpdateGame(SavedGame);
     }
 
-    public async Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType)
+    public async Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType, Position position)
     {
         if (SavedGame is null)
             return new NotFoundError("No game active");
         if (SavedGame.GameState != GameState.Ongoing)
             return new UnauthorizedError("Game is already over");
         
-        var animal = await gameService.PurchaseAnimal(SavedGame, animalType);
+        var animal = await gameService.PurchaseAnimal(SavedGame, animalType, position);
         if (animal.HasValue)
         {
             Animals.Add(animal.GetValueOrThrow());
@@ -175,14 +175,14 @@ public class JurassicParkModel(IGameService gameService, IRouteValidator routeVa
         return await gameService.DeleteAnimal(animal);
     }
 
-    public async Task<Result<MapObject, ServiceError>> PurchaseMapObject(MapObjectType mapObjectType)
+    public async Task<Result<MapObject, ServiceError>> PurchaseMapObject(MapObjectType mapObjectType, Position position)
     {
         if (SavedGame is null)
             return new NotFoundError("No game active");
         if (SavedGame.GameState != GameState.Ongoing)
             return new UnauthorizedError("Game is already over");
         
-        var obj = await gameService.PurchaseMapObject(SavedGame, mapObjectType);
+        var obj = await gameService.PurchaseMapObject(SavedGame, mapObjectType, position);
         if (obj.HasValue)
         {
             MapObjects.Add(obj.GetValueOrThrow());

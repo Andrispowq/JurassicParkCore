@@ -34,11 +34,11 @@ public interface IJurassicParkModel
     Task SaveAsync();
     
     //Transactional stuff
-    Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType);
+    Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType, Position position);
     Task<Option<ServiceError>> SellAnimal(Animal animal);
     Task<Option<ServiceError>> KillAnimal(Animal animal);
     
-    Task<Result<MapObject, ServiceError>> PurchaseMapObject(MapObjectType mapObjectType);
+    Task<Result<MapObject, ServiceError>> PurchaseMapObject(MapObjectType mapObjectType, Position position);
     Task<Option<ServiceError>> SellMapObject(MapObject mapObject);
     Task<Option<ServiceError>> RemoveMapObject(MapObject mapObject);
     

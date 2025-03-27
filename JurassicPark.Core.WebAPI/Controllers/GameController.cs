@@ -23,6 +23,14 @@ public class GameController(IGameService gameService) : ControllerBase
         return game.ToOkResult(g => new SavedGameDto(g));
     }
 
+    [HttpPost]
+    public async Task<IActionResult> CreateGameAsync([FromBody] SavedGameCreateDto request)
+    {
+        var game = await gameService.CreateNewGame(request.Name,
+            request.Difficulty, request.MapWidth, request.MapHeight);
+        return game.ToOkResult(g => new SavedGameDto(g));
+    }
+
     [HttpPut("{id:long}")]
     public async Task<IActionResult> UpdateSavedGameAsync(long id, [FromBody] SavedGameUpdateRequest request)
     {

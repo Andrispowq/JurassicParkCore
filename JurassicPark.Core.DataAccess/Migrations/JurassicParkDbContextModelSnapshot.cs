@@ -15,7 +15,7 @@ namespace JurassicPark.Core.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
 
             modelBuilder.Entity("JurassicPark.Core.DataSchemas.Animal", b =>
                 {
@@ -49,7 +49,7 @@ namespace JurassicPark.Core.Migrations
                     b.Property<long?>("PointOfInterestId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("PositionId")
+                    b.Property<long>("PositionId")
                         .HasColumnType("INTEGER");
 
                     b.Property<long>("SavedGameId")
@@ -205,7 +205,7 @@ namespace JurassicPark.Core.Migrations
                     b.Property<long>("MapObjectTypeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("PositionId")
+                    b.Property<long>("PositionId")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("ResourceAmount")
@@ -372,7 +372,9 @@ namespace JurassicPark.Core.Migrations
 
                     b.HasOne("JurassicPark.Core.DataSchemas.Position", "Position")
                         .WithMany()
-                        .HasForeignKey("PositionId");
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("JurassicPark.Core.DataSchemas.SavedGame", "SavedGame")
                         .WithMany("Animals")
@@ -473,7 +475,9 @@ namespace JurassicPark.Core.Migrations
 
                     b.HasOne("JurassicPark.Core.DataSchemas.Position", "Position")
                         .WithMany()
-                        .HasForeignKey("PositionId");
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("JurassicPark.Core.DataSchemas.SavedGame", "SavedGame")
                         .WithMany("MapObjects")
