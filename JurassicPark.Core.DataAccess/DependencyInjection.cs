@@ -29,4 +29,9 @@ public static class DependencyInjection
 
         return services;
     }
+
+    public static async Task MigrateAsync(JurassicParkDbContext dbContext)
+    {
+        await dbContext.Database.MigrateAsync();
+    }
 }

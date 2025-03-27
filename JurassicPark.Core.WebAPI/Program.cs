@@ -39,7 +39,8 @@ using (var scope = app.Services.CreateScope())
 {
     var dbFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<JurassicParkDbContext>>();
     await using var db = await dbFactory.CreateDbContextAsync();
-    await db.Database.MigrateAsync();
+    await DependencyInjection.MigrateAsync(db);
+    //await db.Database.MigrateAsync();
 }
 
 await app.RunAsync();
