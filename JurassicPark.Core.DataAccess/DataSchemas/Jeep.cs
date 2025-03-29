@@ -21,6 +21,10 @@ public record Jeep : IKeyedDataType
     
     public async Task LoadNavigationProperties(IGameService service)
     {
-        if (RouteId != null) await service.LoadReference(this, o => o.Route);
+        if (RouteId != null)
+        {
+            await service.LoadReference(this, o => o.Route);
+            await Route!.LoadNavigationProperties(service);
+        }
     }
 }
