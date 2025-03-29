@@ -6,9 +6,6 @@ namespace JurassicPark.Core.DataSchemas;
 
 public record Jeep : IKeyedDataType
 {
-    //TODO: move this to the game
-    [NotMapped] public static readonly decimal JeepPrice = 2000;
-    
     [Key] public long Id { get; set; }
     public required long SavedGameId { get; set; }
     [Range(0, 4)] public required int SeatedVisitors { get; set; }

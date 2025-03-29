@@ -7,4 +7,11 @@ namespace JurassicPark.Core.OldModel.Dto
         public decimal RouteProgression { get; set; }
         public JeepRoute? Route { get; set; }
     }
+
+    public class UpdateJeepRequest
+    {
+        public int SeatedVisitors { get; set; }
+        public decimal RouteProgression { get; set; }
+        public long? RouteId { get; set; }
+    }
 }

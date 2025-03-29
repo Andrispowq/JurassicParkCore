@@ -63,7 +63,7 @@ public class MapObjectController(IGameService gameService) : ControllerBase
     }
     
     [HttpDelete("{id:long}/sell")]
-    public async Task<IActionResult> SellMapObject(long gameId, long id, [FromQuery] decimal refundPrice)
+    public async Task<IActionResult> SellMapObject(long gameId, long id, [FromBody] decimal refundPrice)
     {
         var game = await gameService.GetSavedGame(gameId);
         if (game.IsError) return game.GetErrorOrThrow().ToHttpResult();

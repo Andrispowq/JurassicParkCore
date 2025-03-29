@@ -522,6 +522,12 @@ public class GameService(
         return jeepService.GetRoutes(db, game).ToList();
     }
 
+    public async Task<Result<JeepRoute, ServiceError>> GetRouteById(long id)
+    {
+        await using var db = await dbContextFactory.CreateDbContextAsync();
+        return await jeepService.GetRouteById(db, id);
+    }
+
     public async Task<Option<ServiceError>> CreateRoute(SavedGame savedGame, JeepRoute route)
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
