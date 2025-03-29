@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "KuAG+ostKro=",
+  "dgSpecHash": "ujQBtEbfI4M=",
   "success": true,
   "projectFilePath": "/Users/andraskmeczo/RiderProjects/JurassicParkCore/JurassicPark.Playground/JurassicPark.Playground.csproj",
   "expectedPackageFiles": [
@@ -10,13 +10,13 @@
     "/Users/andraskmeczo/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.3/microsoft.entityframeworkcore.abstractions.9.0.3.nupkg.sha512",
     "/Users/andraskmeczo/.nuget/packages/microsoft.entityframeworkcore.analyzers/9.0.3/microsoft.entityframeworkcore.analyzers.9.0.3.nupkg.sha512",
     "/Users/andraskmeczo/.nuget/packages/microsoft.entityframeworkcore.proxies/9.0.3/microsoft.entityframeworkcore.proxies.9.0.3.nupkg.sha512",
-    "/Users/andraskmeczo/.nuget/packages/microsoft.entityframeworkcore.relational/9.0.1/microsoft.entityframeworkcore.relational.9.0.1.nupkg.sha512",
+    "/Users/andraskmeczo/.nuget/packages/microsoft.entityframeworkcore.relational/9.0.3/microsoft.entityframeworkcore.relational.9.0.3.nupkg.sha512",
     "/Users/andraskmeczo/.nuget/packages/microsoft.entityframeworkcore.sqlite/9.0.1/microsoft.entityframeworkcore.sqlite.9.0.1.nupkg.sha512",
     "/Users/andraskmeczo/.nuget/packages/microsoft.entityframeworkcore.sqlite.core/9.0.1/microsoft.entityframeworkcore.sqlite.core.9.0.1.nupkg.sha512",
     "/Users/andraskmeczo/.nuget/packages/microsoft.extensions.caching.abstractions/9.0.3/microsoft.extensions.caching.abstractions.9.0.3.nupkg.sha512",
     "/Users/andraskmeczo/.nuget/packages/microsoft.extensions.caching.memory/9.0.3/microsoft.extensions.caching.memory.9.0.3.nupkg.sha512",
     "/Users/andraskmeczo/.nuget/packages/microsoft.extensions.configuration/9.0.1/microsoft.extensions.configuration.9.0.1.nupkg.sha512",
-    "/Users/andraskmeczo/.nuget/packages/microsoft.extensions.configuration.abstractions/9.0.1/microsoft.extensions.configuration.abstractions.9.0.1.nupkg.sha512",
+    "/Users/andraskmeczo/.nuget/packages/microsoft.extensions.configuration.abstractions/9.0.3/microsoft.extensions.configuration.abstractions.9.0.3.nupkg.sha512",
     "/Users/andraskmeczo/.nuget/packages/microsoft.extensions.configuration.binder/9.0.1/microsoft.extensions.configuration.binder.9.0.1.nupkg.sha512",
     "/Users/andraskmeczo/.nuget/packages/microsoft.extensions.configuration.commandline/9.0.1/microsoft.extensions.configuration.commandline.9.0.1.nupkg.sha512",
     "/Users/andraskmeczo/.nuget/packages/microsoft.extensions.configuration.environmentvariables/9.0.1/microsoft.extensions.configuration.environmentvariables.9.0.1.nupkg.sha512",
