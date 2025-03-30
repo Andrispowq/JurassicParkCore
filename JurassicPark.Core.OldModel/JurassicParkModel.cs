@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JurassicPark.Core.OldModel.Behaviours;
 using JurassicPark.Core.OldModel.Connection;
 using JurassicPark.Core.OldModel.Dto;
 using JurassicPark.Core.OldModel.Functional;
+using JurassicPark.Core.OldModel.Validators;
 
 namespace JurassicPark.Core.OldModel
 {
@@ -15,8 +17,8 @@ namespace JurassicPark.Core.OldModel
         public List<Animal> Animals { get; private set; } = null!;
         public List<AnimalGroup> AnimalGroups { get; private set; } = null!;
         public List<AnimalType> AnimalTypes { get; private set; } = null!;
-        //public List<Jeep> Jeeps { get; private set; } = null!;
-        //public List<JeepRoute> JeepRoutes { get; private set; } = null!;
+        public List<Jeep> Jeeps { get; private set; } = null!;
+        public List<JeepRoute> JeepRoutes { get; private set; } = null!;
         public List<MapObject> MapObjects { get; private set; } = null!;
         public List<MapObjectType> MapObjectTypes { get; private set; } = null!;
         public List<Position> Positions { get; private set; } = null!;
@@ -24,11 +26,16 @@ namespace JurassicPark.Core.OldModel
 
         public SavedGame? SavedGame { get; private set; }
 
-        private readonly Connection.Connection _connection;
+        private readonly Connection.Connection _connection = new Connection.Connection();
+        
+        private readonly IAnimalBehaviourHandler _animalBehaviourHandler;
+        private readonly IRouteValidator _routeValidator;
 
-        public JurassicParkModel()
+        public JurassicParkModel(IAnimalBehaviourHandler animalBehaviourHandler,
+            IRouteValidator routeValidator)
         {
-            _connection = new Connection.Connection();
+            _animalBehaviourHandler = animalBehaviourHandler;
+            _routeValidator = routeValidator;
         }
 
         public async Task<IEnumerable<SavedGame>> LoadSavedGamesAsync()
@@ -55,8 +62,10 @@ namespace JurassicPark.Core.OldModel
                            ?? new List<AnimalGroup>();
             AnimalTypes = await _connection.Request<List<AnimalType>>(new GetRequest("animal-types")) 
                           ?? new List<AnimalType>();
-            //Jeeps = await gameService.GetJeeps(SavedGame);
-            //JeepRoutes = await gameService.GetRoutes(SavedGame);
+            Jeeps = await _connection.Request<List<Jeep>>(new GetRequest("jeeps")) 
+                    ?? new List<Jeep>();
+            JeepRoutes = await _connection.Request<List<JeepRoute>>(new GetRequest("jeep-routes")) 
+                         ?? new List<JeepRoute>();
             MapObjects = await _connection.Request<List<MapObject>>(new GetRequest($"games/{id}/map-objects")) 
                          ?? new List<MapObject>();
             MapObjectTypes = await  _connection.Request<List<MapObjectType>>(new GetRequest($"map-object-types")) 
@@ -102,8 +111,8 @@ namespace JurassicPark.Core.OldModel
 
             Animals.Clear();
             AnimalGroups.Clear();
-            //Jeeps.Clear();
-            //JeepRoutes.Clear();
+            Jeeps.Clear();
+            JeepRoutes.Clear();
             MapObjects.Clear();
             Transactions.Clear();
 
@@ -195,6 +204,38 @@ namespace JurassicPark.Core.OldModel
                 updatedGame));
         }
 
+        public async Task<IEnumerable<AnimalType>> GetAnimalTypes()
+        {
+            AnimalTypes = await _connection.Request<List<AnimalType>>(new GetRequest("animal-types")) 
+                          ?? new List<AnimalType>();
+            return AnimalTypes;
+        }
+
+        public async Task<Result<AnimalType, ServiceError>> CreateAnimalType(CreateAnimalTypeRequest request)
+        {
+            var obj = await _connection.Request<AnimalType>(new PostRequest("animal-types", request));
+            if (obj is null) return new ConflictError("Could not create animal type");
+
+            AnimalTypes.Add(obj);
+            return obj;
+        }
+
+        public async Task<IEnumerable<MapObjectType>> GetMapObjectTypes()
+        {
+            MapObjectTypes = await _connection.Request<List<MapObjectType>>(new GetRequest("map-object-types")) 
+                            ?? new List<MapObjectType>();
+            return MapObjectTypes;
+        }
+
+        public async Task<Result<MapObjectType, ServiceError>> CreateMapObjectType(CreateMapObjectTypeDto request)
+        {
+            var obj = await _connection.Request<MapObjectType>(new PostRequest("map-object-types", request));
+            if (obj is null) return new ConflictError("Could not create map object type");
+
+            MapObjectTypes.Add(obj);
+            return obj;
+        }
+
         public async Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType, Position position)
         {
             if (SavedGame is null)
@@ -264,13 +305,10 @@ namespace JurassicPark.Core.OldModel
 
             var obj = await _connection.Request<MapObject>(new PostRequest($"games/{SavedGame.Id}/map-objects/purchase/{mapObjectType.Id}", 
                 position));
-            if (obj != null)
-            {
-                MapObjects.Add(obj);
-                return obj;
-            }
-
-            return new ConflictError("MapObject could not be purchased");
+            if (obj == null) return new ConflictError("MapObject could not be purchased");
+            
+            MapObjects.Add(obj);
+            return obj;
         }
 
         public async Task<Option<ServiceError>> SellMapObject(MapObject mapObject)
@@ -315,19 +353,17 @@ namespace JurassicPark.Core.OldModel
             return new Option<ServiceError>.None();
         }
 
-        /*public async Task<Result<Jeep, ServiceError>> PurchaseJeep()
+        public async Task<Result<Jeep, ServiceError>> PurchaseJeep()
         {
             if (SavedGame is null)
                 return new NotFoundError("No game active");
             if (SavedGame.GameState != GameState.Ongoing)
                 return new UnauthorizedError("Game is already over");
-
-            var obj = await gameService.PurchaseJeep(SavedGame, JeepPrice);
-            if (obj.HasValue)
-            {
-                Jeeps.Add(obj.GetValueOrThrow());
-            }
-
+            
+            var obj = await _connection.Request<Jeep>(new PostRequest($"games/{SavedGame.Id}/jeep", JeepPrice));
+            if (obj == null) return new ConflictError("Jeep could not be purchased");
+            
+            Jeeps.Add(obj);
             return obj;
         }
 
@@ -339,7 +375,14 @@ namespace JurassicPark.Core.OldModel
                 return new UnauthorizedError("Game is already over");
 
             Jeeps.Remove(jeep);
-            return await gameService.SellJeep(SavedGame, jeep, JeepPrice);
+
+            var refundPrice = JeepPrice * 0.75m;
+            
+            var result = await _connection.Request<Jeep>(new DeleteRequest($"games/{SavedGame.Id}/jeep/{jeep.Id}/sell", 
+                refundPrice));
+            if (result is null) return new NotFoundError("Jeep not found");
+            
+            return new Option<ServiceError>.None();
         }
 
         public async Task<Option<ServiceError>> DuplicateRoute(JeepRoute jeepRoute, Position position)
@@ -349,7 +392,7 @@ namespace JurassicPark.Core.OldModel
             if (SavedGame.GameState != GameState.Ongoing)
                 return new UnauthorizedError("Game is already over");
 
-            var contains = await routeValidator.IsPositionOnRoute(jeepRoute, position);
+            var contains = _routeValidator.IsPositionOnRoute(jeepRoute, position);
             if (!contains) return new BadRequestError("Route doesn't have this position");
 
             //TODO
@@ -363,7 +406,7 @@ namespace JurassicPark.Core.OldModel
             if (SavedGame.GameState != GameState.Ongoing)
                 return new UnauthorizedError("Game is already over");
 
-            var canPurchase = await routeValidator.CanAddRouteBlock(jeepRoute, position);
+            var canPurchase = _routeValidator.CanAddRouteBlock(jeepRoute, position);
             if (!canPurchase)
             {
                 return new BadRequestError("Can not remove any more elements");
@@ -380,7 +423,7 @@ namespace JurassicPark.Core.OldModel
             if (SavedGame.GameState != GameState.Ongoing)
                 return new UnauthorizedError("Game is already over");
 
-            var canRemove = await routeValidator.CanRemoveElement(jeepRoute);
+            var canRemove = _routeValidator.CanRemoveElement(jeepRoute);
             if (canRemove)
             {
                 //TODO remove
@@ -388,12 +431,19 @@ namespace JurassicPark.Core.OldModel
             }
 
             return new BadRequestError("Can not remove any more elements");
-        }*/
+        }
 
         public async Task UpdateAsync(double delta)
         {
             if (SavedGame?.GameState != GameState.Ongoing)
                 return;
+
+            foreach (var animal in Animals)
+            {
+                await _animalBehaviourHandler.ApplySingleChangesAsync(this, animal, delta);
+            }
+
+            await _animalBehaviourHandler.ApplyGroupChangesAsync(this, delta);
 
             throw new NotImplementedException();
         }

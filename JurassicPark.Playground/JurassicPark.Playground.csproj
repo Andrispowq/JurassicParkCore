@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\JurassicPark.Core.DataAccess\JurassicPark.Core.DataAccess.csproj" />
+      <ProjectReference Include="..\JurassicPark.Core.OldModel\JurassicPark.Core.OldModel.csproj" />
     </ItemGroup>
 
     <ItemGroup>

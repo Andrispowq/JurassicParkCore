@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tBwLup2YcEI=",
+  "dgSpecHash": "bnO+tCXX9o8=",
   "success": true,
-  "projectFilePath": "G:\\Szofttech\\JurassicParkCore\\JurassicPark.Playground\\JurassicPark.Playground.csproj",
+  "projectFilePath": "G:\\Szofttech\\JurassicParkProject\\JurassicParkCore\\JurassicPark.Playground\\JurassicPark.Playground.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\akmec\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\akmec\\.nuget\\packages\\microsoft.data.sqlite.core\\9.0.1\\microsoft.data.sqlite.core.9.0.1.nupkg.sha512",
@@ -43,6 +43,7 @@
     "C:\\Users\\akmec\\.nuget\\packages\\microsoft.extensions.options\\9.0.3\\microsoft.extensions.options.9.0.3.nupkg.sha512",
     "C:\\Users\\akmec\\.nuget\\packages\\microsoft.extensions.options.configurationextensions\\9.0.1\\microsoft.extensions.options.configurationextensions.9.0.1.nupkg.sha512",
     "C:\\Users\\akmec\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.3\\microsoft.extensions.primitives.9.0.3.nupkg.sha512",
+    "C:\\Users\\akmec\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\akmec\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.10\\sqlitepclraw.bundle_e_sqlite3.2.1.10.nupkg.sha512",
     "C:\\Users\\akmec\\.nuget\\packages\\sqlitepclraw.core\\2.1.10\\sqlitepclraw.core.2.1.10.nupkg.sha512",
     "C:\\Users\\akmec\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.10\\sqlitepclraw.lib.e_sqlite3.2.1.10.nupkg.sha512",

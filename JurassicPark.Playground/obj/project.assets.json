@@ -786,6 +786,19 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
+      "Newtonsoft.Json/13.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "SQLitePCLRaw.bundle_e_sqlite3/2.1.10": {
         "type": "package",
         "dependencies": {
@@ -989,6 +1002,19 @@
         },
         "runtime": {
           "bin/placeholder/JurassicPark.Core.DataAccess.dll": {}
+        }
+      },
+      "JurassicPark.Core.OldModel/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.1",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3"
+        },
+        "compile": {
+          "bin/placeholder/JurassicPark.Core.OldModel.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/JurassicPark.Core.OldModel.dll": {}
         }
       }
     }
@@ -2063,6 +2089,36 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "Newtonsoft.Json/13.0.3": {
+      "sha512": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "type": "package",
+      "path": "newtonsoft.json/13.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "README.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/net6.0/Newtonsoft.Json.dll",
+        "lib/net6.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "newtonsoft.json.13.0.3.nupkg.sha512",
+        "newtonsoft.json.nuspec",
+        "packageIcon.png"
+      ]
+    },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.10": {
       "sha512": "UxWuisvZ3uVcVOLJQv7urM/JiQH+v3TmaJc1BLKl5Dxfm/nTzTUrqswCqg/INiYLi61AXnHo1M1JPmPqqLnAdg==",
       "type": "package",
@@ -2285,11 +2341,17 @@
       "type": "project",
       "path": "../JurassicPark.Core.DataAccess/JurassicPark.Core.DataAccess.csproj",
       "msbuildProject": "../JurassicPark.Core.DataAccess/JurassicPark.Core.DataAccess.csproj"
+    },
+    "JurassicPark.Core.OldModel/1.0.0": {
+      "type": "project",
+      "path": "../JurassicPark.Core.OldModel/JurassicPark.Core.OldModel.csproj",
+      "msbuildProject": "../JurassicPark.Core.OldModel/JurassicPark.Core.OldModel.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
       "JurassicPark.Core.DataAccess >= 1.0.0",
+      "JurassicPark.Core.OldModel >= 1.0.0",
       "Microsoft.EntityFrameworkCore.Sqlite >= 9.0.1",
       "Microsoft.Extensions.Hosting >= 9.0.1"
     ]
@@ -2302,11 +2364,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\Szofttech\\JurassicParkCore\\JurassicPark.Playground\\JurassicPark.Playground.csproj",
+      "projectUniqueName": "G:\\Szofttech\\JurassicParkProject\\JurassicParkCore\\JurassicPark.Playground\\JurassicPark.Playground.csproj",
       "projectName": "JurassicPark.Playground",
-      "projectPath": "G:\\Szofttech\\JurassicParkCore\\JurassicPark.Playground\\JurassicPark.Playground.csproj",
+      "projectPath": "G:\\Szofttech\\JurassicParkProject\\JurassicParkCore\\JurassicPark.Playground\\JurassicPark.Playground.csproj",
       "packagesPath": "C:\\Users\\akmec\\.nuget\\packages\\",
-      "outputPath": "G:\\Szofttech\\JurassicParkCore\\JurassicPark.Playground\\obj\\",
+      "outputPath": "G:\\Szofttech\\JurassicParkProject\\JurassicParkCore\\JurassicPark.Playground\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -2329,8 +2391,11 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "G:\\Szofttech\\JurassicParkCore\\JurassicPark.Core.DataAccess\\JurassicPark.Core.DataAccess.csproj": {
-              "projectPath": "G:\\Szofttech\\JurassicParkCore\\JurassicPark.Core.DataAccess\\JurassicPark.Core.DataAccess.csproj"
+            "G:\\Szofttech\\JurassicParkProject\\JurassicParkCore\\JurassicPark.Core.DataAccess\\JurassicPark.Core.DataAccess.csproj": {
+              "projectPath": "G:\\Szofttech\\JurassicParkProject\\JurassicParkCore\\JurassicPark.Core.DataAccess\\JurassicPark.Core.DataAccess.csproj"
+            },
+            "G:\\Szofttech\\JurassicParkProject\\JurassicParkCore\\JurassicPark.Core.OldModel\\JurassicPark.Core.OldModel.csproj": {
+              "projectPath": "G:\\Szofttech\\JurassicParkProject\\JurassicParkCore\\JurassicPark.Core.OldModel\\JurassicPark.Core.OldModel.csproj"
             }
           }
         }
