@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -47,8 +48,7 @@ namespace JurassicPark.Core.OldModel.Connection
             else
             {
                 var json = JsonConvert.SerializeObject(content);
-                var stringContent = new StringContent(json);
-                Content = stringContent;
+                Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
         }
 
@@ -81,8 +81,7 @@ namespace JurassicPark.Core.OldModel.Connection
             else
             {
                 var json = JsonConvert.SerializeObject(content);
-                var stringContent = new StringContent(json);
-                Content = stringContent;
+                Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
         }
 
@@ -115,8 +114,7 @@ namespace JurassicPark.Core.OldModel.Connection
             else
             {
                 var json = JsonConvert.SerializeObject(content);
-                var stringContent = new StringContent(json);
-                Content = stringContent;
+                Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
         }
 
@@ -149,8 +147,7 @@ namespace JurassicPark.Core.OldModel.Connection
             else
             {
                 var json = JsonConvert.SerializeObject(content);
-                var stringContent = new StringContent(json);
-                Content = stringContent;
+                Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
         }
 

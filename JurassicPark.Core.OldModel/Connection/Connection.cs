@@ -8,14 +8,14 @@ namespace JurassicPark.Core.OldModel.Connection
     internal class Connection
     {
         private readonly string _ip = "localhost";
-        private readonly int _port = 7228;
+        private readonly int _port = 5173;
 
         private readonly HttpClient _client;
 
         public Connection()
         {
             _client = new HttpClient();
-            _client.BaseAddress = new Uri($"https://{_ip}:{_port}");
+            _client.BaseAddress = new Uri($"http://{_ip}:{_port}");
         }
         
         public async Task<T?> Request<T>(IHttpRequest request) where T : class
