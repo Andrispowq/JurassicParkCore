@@ -15,11 +15,11 @@ namespace JurassicPark.Core.OldModel.Behaviours
         public decimal ViewDistance => 15; //in in-game tiles
         public decimal AcceptedPointOfInterestRadius => ViewDistance * 2 / 3; //in in-game tiles
 
-        private decimal ThirstThreshold => 60;
-        private decimal HungerThreshold => 60;
-        private decimal DigestionThreshold => 20;
-        private double MatingChangePercent => 2; //2 percent change every second
-        private double ConsumeDistance => 3;
+        private static decimal ThirstThreshold => 60;
+        private static decimal HungerThreshold => 60;
+        private static decimal DigestionThreshold => 20;
+        private static double MatingChangePercent => 2; //2 percent change every second
+        private static double ConsumeDistance => 3;
         
         private readonly IRandomValueProvider _randomValueProvider;
 
@@ -75,12 +75,14 @@ namespace JurassicPark.Core.OldModel.Behaviours
 
         private AnimalState DetermineState(IJurassicParkModel model, Animal animal, double delta)
         {
+            //Most important thing: thirst/drinking
             if (animal.ThirstLevel > ThirstThreshold)
             {
                 var hasNearby = HasWaterSourceNearby(model, animal) != null;
                 return hasNearby ? AnimalState.Drinking : AnimalState.Thirsty;
             }
 
+            //Second most important: hunger/eating
             if (animal.HungerLevel > HungerThreshold)
             {
                 var hasNearby = animal.AnimalType.EatingHabit switch
@@ -92,14 +94,16 @@ namespace JurassicPark.Core.OldModel.Behaviours
                 return hasNearby ? AnimalState.Eating : AnimalState.Hungry;
             }
 
-            if (animal.HungerLevel < DigestionThreshold || animal.ThirstLevel < ThirstThreshold)
+            //If the animal has recently eaten/drank, the state is digestion
+            if (animal.HungerLevel < DigestionThreshold || animal.ThirstLevel < DigestionThreshold)
             {
                 return AnimalState.Digesting;
             }
 
-            if (animal.Group == null) return AnimalState.SearchingGroup;
+            //if no group, search one
+            if (animal.Group is null) return AnimalState.SearchingGroup;
 
-            //Now let's handle group dynamics
+            //if in a group, either mate or just hang out
             var mating = _randomValueProvider.RollDice(delta * MatingChangePercent);
             return mating ? AnimalState.Mating : AnimalState.HangingOutInGroup;
         }
@@ -128,7 +132,7 @@ namespace JurassicPark.Core.OldModel.Behaviours
             animal.ThirstLevel += ThirstIncreasePerMinute * (decimal)delta;
             animal.HungerLevel += HealthIncreasePerMinute * (decimal)delta;
 
-            bool applyDamage = false;
+            var applyDamage = false;
             if (animal.ThirstLevel > 100)
             {
                 animal.ThirstLevel = 100;
