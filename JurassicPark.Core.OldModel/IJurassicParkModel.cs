@@ -40,6 +40,13 @@ namespace JurassicPark.Core.OldModel
         Task<Result<AnimalType, ServiceError>> CreateAnimalType(CreateAnimalTypeRequest request);
         Task<IEnumerable<MapObjectType>> GetMapObjectTypes();
         Task<Result<MapObjectType, ServiceError>> CreateMapObjectType(CreateMapObjectTypeDto request);
+        
+        //Transactions
+        Task<Result<decimal, ServiceError>> GetBalance();
+        Task<IEnumerable<Transaction>> GetTransactions();
+        Task<IEnumerable<Transaction>> GetAllTransactions();
+        Task<Result<Transaction, ServiceError>> CreateCheckpoint();
+        //Task<Result<Transaction, ServiceError>> CreateTransaction(TransactionType type, decimal amount, bool canLose);
 
         //Transactional stuff
         Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType, Position position);

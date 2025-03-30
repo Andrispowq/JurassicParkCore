@@ -28,6 +28,16 @@ public class TransactionController(IGameService gameService) : ControllerBase
         var transactions = await gameService.GetAllTransactions(game.GetValueOrThrow());
         return Ok(transactions.Select(t => new TransactionDto(t)));
     }
+    
+    [HttpGet("balance")]
+    public async Task<IActionResult> GetBalance(long gameId)
+    {
+        var game = await gameService.GetSavedGame(gameId);
+        if (game.IsError) return game.GetErrorOrThrow().ToHttpResult();
+        
+        var balance = await gameService.GetCurrentBalance(game.GetValueOrThrow());
+        return Ok(balance.ToHttpResult());
+    }
 
     [HttpPost("create-checkpoint")]
     public async Task<IActionResult> CreateCheckpoint(long gameId)

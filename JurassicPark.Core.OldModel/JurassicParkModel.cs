@@ -236,6 +236,66 @@ namespace JurassicPark.Core.OldModel
             return obj;
         }
 
+        public async Task<Result<decimal, ServiceError>> GetBalance()
+        {
+            if (SavedGame?.GameState != GameState.Ongoing)
+                return new UnauthorizedError("Game is already over");
+
+            var result =
+                await _connection.Request<string>(new GetRequest($"games/{SavedGame.Id}/transactions/balance"));
+            if (result is null) return new NotFoundError("Game not found");
+
+            if (decimal.TryParse(result, out var res))
+            {
+                return res;
+            }
+            
+            return new NotFoundError("Game not found");
+        }
+
+        public async Task<IEnumerable<Transaction>> GetTransactions()
+        {
+            if (SavedGame?.GameState != GameState.Ongoing)
+                return new List<Transaction>();
+            
+            Transactions = await _connection.Request<List<Transaction>>(new GetRequest($"games/{SavedGame.Id}/transactions"))
+                ?? new List<Transaction>();
+            return Transactions;
+        }
+
+        public async Task<IEnumerable<Transaction>> GetAllTransactions()
+        {
+            if (SavedGame?.GameState != GameState.Ongoing)
+                return new List<Transaction>();
+            
+            return await _connection.Request<List<Transaction>>(new GetRequest($"games/{SavedGame.Id}/transactions/all"))
+                ?? new List<Transaction>();
+        }
+
+        public async Task<Result<Transaction, ServiceError>> CreateCheckpoint()
+        {
+            if (SavedGame?.GameState != GameState.Ongoing)
+                return new NotFoundError("Game is already over");
+
+            var result =
+                await _connection.Request<Transaction>(new PostRequest($"games/{SavedGame.Id}/transactions/create-checkpoint", null));
+            if (result is null) return new NotFoundError("Game not found");
+
+            return result;
+        }
+
+        /*public async Task<Result<Transaction, ServiceError>> CreateTransaction(TransactionType type, decimal amount, bool canLose)
+        {
+            if (SavedGame?.GameState != GameState.Ongoing)
+                return new NotFoundError("Game is already over");
+
+            var result =
+                await _connection.Request<Transaction>(new PostRequest($"games/{SavedGame.Id}/transactions/create-checkpoint", null));
+            if (result is null) return new NotFoundError("Game not found");
+
+            return result;
+        }*/
+
         public async Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType, Position position)
         {
             if (SavedGame is null)
