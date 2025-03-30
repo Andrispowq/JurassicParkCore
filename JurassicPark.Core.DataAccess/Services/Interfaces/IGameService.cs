@@ -69,6 +69,7 @@ public interface IGameService
     
     //Jeep routes
     Task<List<JeepRoute>> GetRoutes(SavedGame game);
+    Task<Result<JeepRoute, ServiceError>> GetRouteById(long id);
     Task<Option<ServiceError>> CreateRoute(SavedGame savedGame, JeepRoute route);
     Task<Option<ServiceError>> UpdateRoute(JeepRoute route);
     Task<Option<ServiceError>> DeleteRoute(JeepRoute route);

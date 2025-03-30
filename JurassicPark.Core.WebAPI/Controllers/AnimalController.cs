@@ -57,12 +57,11 @@ public class AnimalController(IGameService gameService) : ControllerBase
         var result = await gameService.PurchaseAnimal(game.GetValueOrThrow(), type.GetValueOrThrow(), position);
         if (result.IsError) return result.ToHttpResult();
 
-        var animal = result.GetValueOrThrow();
-        return Ok(await animal.ToDtoAsync(gameService));
+        return Ok(await result.GetValueOrThrow().ToDtoAsync(gameService));
     }
     
     [HttpDelete("{id:long}/sell")]
-    public async Task<IActionResult> SellAnimal(long gameId, long id, [FromQuery] decimal refundPrice)
+    public async Task<IActionResult> SellAnimal(long gameId, long id, [FromBody] decimal refundPrice)
     {
         var game = await gameService.GetSavedGame(gameId);
         if (game.IsError) return game.GetErrorOrThrow().ToHttpResult();
