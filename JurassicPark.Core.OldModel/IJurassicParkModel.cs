@@ -34,6 +34,12 @@ namespace JurassicPark.Core.OldModel
         //Update and save
         Task UpdateAsync(double delta);
         Task SaveAsync();
+        
+        //Manage types
+        Task<IEnumerable<AnimalType>> GetAnimalTypes();
+        Task<Result<AnimalType, ServiceError>> CreateAnimalType(CreateAnimalTypeRequest request);
+        Task<IEnumerable<MapObjectType>> GetMapObjectTypes();
+        Task<Result<MapObjectType, ServiceError>> CreateMapObjectType(CreateMapObjectTypeDto request);
 
         //Transactional stuff
         Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType, Position position);

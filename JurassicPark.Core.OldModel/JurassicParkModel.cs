@@ -204,6 +204,38 @@ namespace JurassicPark.Core.OldModel
                 updatedGame));
         }
 
+        public async Task<IEnumerable<AnimalType>> GetAnimalTypes()
+        {
+            AnimalTypes = await _connection.Request<List<AnimalType>>(new GetRequest("animal-types")) 
+                          ?? new List<AnimalType>();
+            return AnimalTypes;
+        }
+
+        public async Task<Result<AnimalType, ServiceError>> CreateAnimalType(CreateAnimalTypeRequest request)
+        {
+            var obj = await _connection.Request<AnimalType>(new PostRequest("animal-types", request));
+            if (obj is null) return new ConflictError("Could not create animal type");
+
+            AnimalTypes.Add(obj);
+            return obj;
+        }
+
+        public async Task<IEnumerable<MapObjectType>> GetMapObjectTypes()
+        {
+            MapObjectTypes = await _connection.Request<List<MapObjectType>>(new GetRequest("map-object-types")) 
+                            ?? new List<MapObjectType>();
+            return MapObjectTypes;
+        }
+
+        public async Task<Result<MapObjectType, ServiceError>> CreateMapObjectType(CreateMapObjectTypeDto request)
+        {
+            var obj = await _connection.Request<MapObjectType>(new PostRequest("map-object-types", request));
+            if (obj is null) return new ConflictError("Could not create map object type");
+
+            MapObjectTypes.Add(obj);
+            return obj;
+        }
+
         public async Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType, Position position)
         {
             if (SavedGame is null)
