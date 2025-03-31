@@ -68,9 +68,9 @@ namespace JurassicPark.Core.OldModel.Behaviours
             }
         }
 
-        public Task ApplyGroupChangesAsync(IJurassicParkModel model, double delta)
+        public async Task ApplyGroupChangesAsync(IJurassicParkModel model, double delta)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private AnimalState DetermineState(IJurassicParkModel model, Animal animal, double delta)

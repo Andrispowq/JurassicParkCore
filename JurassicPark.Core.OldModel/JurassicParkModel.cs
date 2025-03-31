@@ -308,6 +308,14 @@ namespace JurassicPark.Core.OldModel
             return result;
         }
 
+        private async Task UpdateTransactions()
+        {
+            var list = await _connection.Request<List<Transaction>>(new GetRequest($"games/{SavedGame?.Id}/transactions"));
+            if (list is null) return;
+
+            Transactions = list;
+        }
+        
         public async Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType, Position position)
         {
             if (SavedGame is null)
@@ -317,6 +325,8 @@ namespace JurassicPark.Core.OldModel
 
             var animal = await _connection.Request<Animal>(new PostRequest($"games/{SavedGame.Id}/animals/purchase/{animalType.Id}", 
                 position));
+            await UpdateTransactions();
+            
             if (animal != null)
             {
                 Animals.Add(animal);
@@ -341,6 +351,8 @@ namespace JurassicPark.Core.OldModel
             
             var result = await _connection.Request<string>(new DeleteRequest($"games/{SavedGame.Id}/animals/{animal.Id}/sell", 
                 refundPrice));
+            await UpdateTransactions();
+            
             if (result == null)
             {
                 return new NotFoundError("Animal not found");
@@ -377,6 +389,8 @@ namespace JurassicPark.Core.OldModel
 
             var obj = await _connection.Request<MapObject>(new PostRequest($"games/{SavedGame.Id}/map-objects/purchase/{mapObjectType.Id}", 
                 position));
+            await UpdateTransactions();
+            
             if (obj == null) return new ConflictError("MapObject could not be purchased");
             
             MapObjects.Add(obj);
@@ -399,6 +413,8 @@ namespace JurassicPark.Core.OldModel
             
             var result = await _connection.Request<string>(new DeleteRequest($"games/{SavedGame.Id}/map-objects/{mapObject.Id}/sell", 
                 refundPrice));
+            await UpdateTransactions();
+            
             if (result == null)
             {
                 return new NotFoundError("MapObject not found");
@@ -435,6 +451,8 @@ namespace JurassicPark.Core.OldModel
             var obj = await _connection.Request<Jeep>(new PostRequest($"games/{SavedGame.Id}/jeep", JeepPrice));
             if (obj == null) return new ConflictError("Jeep could not be purchased");
             
+            await UpdateTransactions();
+            
             Jeeps.Add(obj);
             return obj;
         }
@@ -452,6 +470,8 @@ namespace JurassicPark.Core.OldModel
             
             var result = await _connection.Request<Jeep>(new DeleteRequest($"games/{SavedGame.Id}/jeep/{jeep.Id}/sell", 
                 refundPrice));
+            await UpdateTransactions();
+            
             if (result is null) return new NotFoundError("Jeep not found");
             
             return new Option<ServiceError>.None();
@@ -484,6 +504,8 @@ namespace JurassicPark.Core.OldModel
                 return new BadRequestError("Can not remove any more elements");
             }
 
+            await UpdateTransactions();
+            
             //TODO
             return new Option<ServiceError>.None();
         }
@@ -500,6 +522,8 @@ namespace JurassicPark.Core.OldModel
             {
                 //TODO remove
                 //TODO is empty, delete
+                await UpdateTransactions();
+            
             }
 
             return new BadRequestError("Can not remove any more elements");
@@ -517,7 +541,7 @@ namespace JurassicPark.Core.OldModel
 
             await _animalBehaviourHandler.ApplyGroupChangesAsync(this, delta);
 
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }
