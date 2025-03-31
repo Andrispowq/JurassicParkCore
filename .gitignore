@@ -5,6 +5,8 @@
 */bin
 */obj
 
+*.db
+
 ## Rider
 .idea/
 *.sln.iml
