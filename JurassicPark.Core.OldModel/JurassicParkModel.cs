@@ -95,7 +95,7 @@ namespace JurassicPark.Core.OldModel
             var game = await _connection.Request<SavedGame>(new PostRequest("games", request));
             if (game != null)
             {
-                SavedGame = game;
+                //SavedGame = game;
                 return game;
             }
 
