@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using JurassicPark.Core.OldModel.Behaviours;
 using JurassicPark.Core.OldModel.Connection;
@@ -36,11 +37,15 @@ namespace JurassicPark.Core.OldModel
         {
             _animalBehaviourHandler = animalBehaviourHandler;
             _routeValidator = routeValidator;
+            
+            //For Parse and TryParse to work correctly
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
         }
 
         public async Task<IEnumerable<SavedGame>> LoadSavedGamesAsync()
         {
-            return await _connection.Request<List<SavedGame>>(new GetRequest("games")) ?? new List<SavedGame>();
+            return await _connection.RequestList<SavedGame>(new GetRequest("games"));
         }
 
         public async Task<Option<ServiceError>> LoadGameAsync(long id)
@@ -56,25 +61,34 @@ namespace JurassicPark.Core.OldModel
 
             SavedGame = game;
 
-            Animals = await _connection.Request<List<Animal>>(new GetRequest($"games/{id}/animals")) 
-                      ?? new List<Animal>();
-            AnimalGroups = await _connection.Request<List<AnimalGroup>>(new GetRequest($"games/{id}/animal-groups")) 
-                           ?? new List<AnimalGroup>();
-            AnimalTypes = await _connection.Request<List<AnimalType>>(new GetRequest("animal-types")) 
-                          ?? new List<AnimalType>();
-            Jeeps = await _connection.Request<List<Jeep>>(new GetRequest("jeeps")) 
-                    ?? new List<Jeep>();
-            JeepRoutes = await _connection.Request<List<JeepRoute>>(new GetRequest("jeep-routes")) 
-                         ?? new List<JeepRoute>();
-            MapObjects = await _connection.Request<List<MapObject>>(new GetRequest($"games/{id}/map-objects")) 
-                         ?? new List<MapObject>();
-            MapObjectTypes = await  _connection.Request<List<MapObjectType>>(new GetRequest($"map-object-types")) 
-                             ?? new List<MapObjectType>();
-            Positions = await _connection.Request<List<Position>>(new GetRequest($"positions")) 
-                        ?? new List<Position>();
-            Transactions = await _connection.Request<List<Transaction>>(new GetRequest($"games/{id}/transactions")) 
-                           ?? new List<Transaction>();
+            Animals = await _connection.RequestList<Animal>(new GetRequest($"games/{id}/animals"));
+            AnimalGroups = await _connection.RequestList<AnimalGroup>(new GetRequest($"games/{id}/animal-groups"));
+            AnimalTypes = await _connection.RequestList<AnimalType>(new GetRequest("animal-types"));
+            Jeeps = await _connection.RequestList<Jeep>(new GetRequest($"games/{id}/jeeps"));
+            JeepRoutes = await _connection.RequestList<JeepRoute>(new GetRequest($"games/{id}/jeep-routes"));
+            MapObjects = await _connection.RequestList<MapObject>(new GetRequest($"games/{id}/map-objects"));
+            MapObjectTypes = await _connection.RequestList<MapObjectType>(new GetRequest($"map-object-types"));
+            Positions = await _connection.RequestList<Position>(new GetRequest($"positions"));
+            Transactions = await _connection.RequestList<Transaction>(new GetRequest($"games/{id}/transactions"));
 
+            return new Option<ServiceError>.None();
+        }
+
+        public async Task<Option<ServiceError>> UnloadGameAsync()
+        {
+            if (SavedGame is null)
+                return new NotFoundError("Game not found");
+
+            await SaveAsync();
+            
+            Animals.Clear();
+            AnimalGroups.Clear();
+            Jeeps.Clear();
+            JeepRoutes.Clear();
+            MapObjects.Clear();
+            Transactions.Clear();
+
+            SavedGame = null;
             return new Option<ServiceError>.None();
         }
 
@@ -206,8 +220,7 @@ namespace JurassicPark.Core.OldModel
 
         public async Task<IEnumerable<AnimalType>> GetAnimalTypes()
         {
-            AnimalTypes = await _connection.Request<List<AnimalType>>(new GetRequest("animal-types")) 
-                          ?? new List<AnimalType>();
+            AnimalTypes = await _connection.RequestList<AnimalType>(new GetRequest("animal-types"));
             return AnimalTypes;
         }
 
@@ -222,8 +235,7 @@ namespace JurassicPark.Core.OldModel
 
         public async Task<IEnumerable<MapObjectType>> GetMapObjectTypes()
         {
-            MapObjectTypes = await _connection.Request<List<MapObjectType>>(new GetRequest("map-object-types")) 
-                            ?? new List<MapObjectType>();
+            MapObjectTypes = await _connection.RequestList<MapObjectType>(new GetRequest("map-object-types"));
             return MapObjectTypes;
         }
 
@@ -258,8 +270,7 @@ namespace JurassicPark.Core.OldModel
             if (SavedGame?.GameState != GameState.Ongoing)
                 return new List<Transaction>();
             
-            Transactions = await _connection.Request<List<Transaction>>(new GetRequest($"games/{SavedGame.Id}/transactions"))
-                ?? new List<Transaction>();
+            Transactions = await _connection.RequestList<Transaction>(new GetRequest($"games/{SavedGame.Id}/transactions"));
             return Transactions;
         }
 
@@ -268,8 +279,7 @@ namespace JurassicPark.Core.OldModel
             if (SavedGame?.GameState != GameState.Ongoing)
                 return new List<Transaction>();
             
-            return await _connection.Request<List<Transaction>>(new GetRequest($"games/{SavedGame.Id}/transactions/all"))
-                ?? new List<Transaction>();
+            return await _connection.RequestList<Transaction>(new GetRequest($"games/{SavedGame.Id}/transactions/all"));
         }
 
         public async Task<Result<Transaction, ServiceError>> CreateCheckpoint()

@@ -7,22 +7,31 @@ namespace JurassicPark.Core.OldModel.Connection
 {
     internal interface IHttpRequest
     {
-        Task<(bool, string)> MakeRequest(HttpClient client);
+        Task<HttpResult> MakeRequest(HttpClient client);
+        string AsString { get; }
+        Task<string> BodyAsStringAsync();
     }
 
     internal class GetRequest : IHttpRequest
     {
         private string Url { get; set; }
+        public string AsString => $"GET {Url}";
 
         public GetRequest(string url)
         {
             Url = url;
         }
 
-        public async Task<(bool, string)> MakeRequest(HttpClient client)
+        public async Task<string> BodyAsStringAsync()
+        {
+            await Task.CompletedTask;
+            return "";
+        }
+
+        public async Task<HttpResult> MakeRequest(HttpClient client)
         {
             var response = await client.GetAsync(Url);
-            return (response.IsSuccessStatusCode, await response.Content.ReadAsStringAsync());
+            return await HttpResult.From(response);
         }
     }
 
@@ -30,6 +39,7 @@ namespace JurassicPark.Core.OldModel.Connection
     {
         private string Url { get; set; }
         private HttpContent? Content { get; set; }
+        public string AsString => $"POST {Url}";
 
         public PostRequest(string url, HttpContent? content = null)
         {
@@ -52,10 +62,16 @@ namespace JurassicPark.Core.OldModel.Connection
             }
         }
 
-        public async Task<(bool, string)> MakeRequest(HttpClient client)
+        public async Task<string> BodyAsStringAsync()
+        {
+            if (Content is null) return "";
+            return await Content.ReadAsStringAsync();
+        }
+
+        public async Task<HttpResult> MakeRequest(HttpClient client)
         {
             var response = await client.PostAsync(Url, Content);
-            return (response.IsSuccessStatusCode, await response.Content.ReadAsStringAsync());
+            return await HttpResult.From(response);
         }
     }
 
@@ -63,6 +79,7 @@ namespace JurassicPark.Core.OldModel.Connection
     {
         private string Url { get; set; }
         private HttpContent? Content { get; set; }
+        public string AsString => $"PUT {Url}";
 
         public PutRequest(string url, HttpContent? content = null)
         {
@@ -85,10 +102,16 @@ namespace JurassicPark.Core.OldModel.Connection
             }
         }
 
-        public async Task<(bool, string)> MakeRequest(HttpClient client)
+        public async Task<string> BodyAsStringAsync()
+        {
+            if (Content is null) return "";
+            return await Content.ReadAsStringAsync();
+        }
+
+        public async Task<HttpResult> MakeRequest(HttpClient client)
         {
             var response = await client.PutAsync(Url, Content);
-            return (response.IsSuccessStatusCode, await response.Content.ReadAsStringAsync());
+            return await HttpResult.From(response);
         }
     }
 
@@ -96,6 +119,7 @@ namespace JurassicPark.Core.OldModel.Connection
     {
         private string Url { get; set; }
         private HttpContent? Content { get; set; }
+        public string AsString => $"PATCH {Url}";
 
         public PatchRequest(string url, HttpContent? content = null)
         {
@@ -118,10 +142,16 @@ namespace JurassicPark.Core.OldModel.Connection
             }
         }
 
-        public async Task<(bool, string)> MakeRequest(HttpClient client)
+        public async Task<string> BodyAsStringAsync()
+        {
+            if (Content is null) return "";
+            return await Content.ReadAsStringAsync();
+        }
+
+        public async Task<HttpResult> MakeRequest(HttpClient client)
         {
             var response = await client.PatchAsync(Url, Content);
-            return (response.IsSuccessStatusCode, await response.Content.ReadAsStringAsync());
+            return await HttpResult.From(response);
         }
     }
     
@@ -129,6 +159,7 @@ namespace JurassicPark.Core.OldModel.Connection
     {
         private string Url { get; set; }
         private HttpContent? Content { get; set; }
+        public string AsString => $"DELETE {Url}";
 
         public DeleteRequest(string url, HttpContent? content = null)
         {
@@ -151,7 +182,13 @@ namespace JurassicPark.Core.OldModel.Connection
             }
         }
 
-        public async Task<(bool, string)> MakeRequest(HttpClient client)
+        public async Task<string> BodyAsStringAsync()
+        {
+            if (Content is null) return "";
+            return await Content.ReadAsStringAsync();
+        }
+
+        public async Task<HttpResult> MakeRequest(HttpClient client)
         {
             HttpResponseMessage? response;
             if (Content != null)
@@ -168,7 +205,7 @@ namespace JurassicPark.Core.OldModel.Connection
                 response = await client.DeleteAsync(Url);
             }
 
-            return (response.IsSuccessStatusCode, await response.Content.ReadAsStringAsync());
+            return await HttpResult.From(response);
         }
     }
 }

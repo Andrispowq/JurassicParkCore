@@ -8,6 +8,8 @@
 *.db
 */*.db
 
+JurassicPark.Core.WebAPI/JurassicParkTest.db
+
 ## Rider
 .idea/
 *.sln.iml

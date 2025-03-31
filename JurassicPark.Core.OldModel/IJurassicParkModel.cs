@@ -25,6 +25,7 @@ namespace JurassicPark.Core.OldModel
         //Game stuff
         Task<IEnumerable<SavedGame>> LoadSavedGamesAsync();
         Task<Option<ServiceError>> LoadGameAsync(long id);
+        Task<Option<ServiceError>> UnloadGameAsync();
 
         Task<Result<SavedGame, ServiceError>> CreateGameAsync(string name, Difficulty difficulty, long mapWidth,
             long mapHeight);
