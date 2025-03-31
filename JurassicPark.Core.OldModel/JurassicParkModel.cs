@@ -284,17 +284,29 @@ namespace JurassicPark.Core.OldModel
             return result;
         }
 
-        /*public async Task<Result<Transaction, ServiceError>> CreateTransaction(TransactionType type, decimal amount, bool canLose)
+        public async Task<Result<Transaction, ServiceError>> CreateTransaction(TransactionType type, decimal amount, bool canLose)
         {
             if (SavedGame?.GameState != GameState.Ongoing)
                 return new NotFoundError("Game is already over");
 
-            var result =
-                await _connection.Request<Transaction>(new PostRequest($"games/{SavedGame.Id}/transactions/create-checkpoint", null));
+            if (type == TransactionType.Checkpoint)
+            {
+                return new UnauthorizedError("Can not create checkpoint with this method");
+            }
+
+            var request = new CreateTransactionDto
+            {
+                Type = type,
+                Amount = amount,
+                CanLose = canLose
+            };
+
+            var result = await _connection.Request<Transaction>(
+                new PostRequest($"games/{SavedGame.Id}/transactions", request));
             if (result is null) return new NotFoundError("Game not found");
 
             return result;
-        }*/
+        }
 
         public async Task<Result<Animal, ServiceError>> PurchaseAnimal(AnimalType animalType, Position position)
         {

@@ -9,3 +9,10 @@ public class TransactionDto(Transaction transaction)
     public TransactionType Type => transaction.Type;
     public decimal Amount => transaction.Amount;
 }
+
+public class CreateTransactionDto
+{
+    public required TransactionType Type { get; init; }
+    public required decimal Amount { get; init; }
+    public required bool CanLose { get; init; }
+}

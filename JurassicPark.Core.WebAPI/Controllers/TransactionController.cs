@@ -1,3 +1,4 @@
+using JurassicPark.Core.DataSchemas;
 using JurassicPark.Core.Services.Interfaces;
 using JurassicPark.Core.WebAPI.Dto;
 using JurassicPark.Core.WebAPI.Functional;
@@ -36,7 +37,7 @@ public class TransactionController(IGameService gameService) : ControllerBase
         if (game.IsError) return game.GetErrorOrThrow().ToHttpResult();
         
         var balance = await gameService.GetCurrentBalance(game.GetValueOrThrow());
-        return Ok(balance.ToHttpResult());
+        return balance.ToHttpResult();
     }
 
     [HttpPost("create-checkpoint")]
@@ -47,5 +48,35 @@ public class TransactionController(IGameService gameService) : ControllerBase
         
         var transactions = await gameService.CreateCheckpoint(game.GetValueOrThrow());
         return transactions.ToOkResult(t => new TransactionDto(t));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateTransaction(long gameId, [FromBody] CreateTransactionDto request)
+    {
+        var game = await gameService.GetSavedGame(gameId);
+        if (game.IsError) return game.GetErrorOrThrow().ToHttpResult();
+
+        if (request.Type == TransactionType.Checkpoint)
+        {
+            return BadRequest("Cannot create a checkpoint transaction on this endpoint");
+        }
+
+        var gameR = game.GetValueOrThrow();
+
+        var transaction = new Transaction
+        {
+            Type = request.Type,
+            Amount = request.Amount,
+            SavedGameId = gameR.Id,
+        };
+
+        var result = await gameService.CreateTransaction(gameR, transaction,
+            request.CanLose);
+        if (result.IsSome)
+        {
+            return result.ToHttpResult();
+        }
+
+        return Ok(new TransactionDto(transaction));
     }
 }

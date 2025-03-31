@@ -9,4 +9,11 @@ namespace JurassicPark.Core.OldModel.Dto
         public TransactionType Type { get; set; }
         public decimal Amount { get; set; }
     }
+
+    public class CreateTransactionDto
+    {
+        public TransactionType Type { get; set; }
+        public decimal Amount { get; set; }
+        public bool CanLose { get; set; }
+    }
 }

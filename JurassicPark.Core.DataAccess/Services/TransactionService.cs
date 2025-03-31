@@ -93,6 +93,10 @@ public class TransactionService : ITransactionService
         {
             return new UnauthorizedError("Game is over");
         }
+        if (transaction.Type == TransactionType.Checkpoint)
+        {
+            return new UnauthorizedError("Checkpoint is not created with this method");
+        }
         
         //Check new balance after transaction
         var balanceResult = GetCurrentBalance(context, savedGame);
